@@ -16,6 +16,8 @@
 		F0A5590621180EE400C2433B /* RTCStream.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5590421180EE400C2433B /* RTCStream.m */; };
 		F0A559092118129700C2433B /* RTCVideoCapturer.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A559072118129700C2433B /* RTCVideoCapturer.h */; };
 		F0A5590A2118129700C2433B /* RTCVideoCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A559082118129700C2433B /* RTCVideoCapturer.m */; };
+		F0A5590D2118212700C2433B /* RTCView.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5590B2118212700C2433B /* RTCView.h */; };
+		F0A5590E2118212700C2433B /* RTCView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5590C2118212700C2433B /* RTCView.m */; };
 		F0EBC8952114777500BE827F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8942114777500BE827F /* AppDelegate.m */; };
 		F0EBC8982114777500BE827F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8972114777500BE827F /* ViewController.m */; };
 		F0EBC89B2114777500BE827F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0EBC8992114777500BE827F /* Main.storyboard */; };
@@ -65,6 +67,8 @@
 		F0A5590421180EE400C2433B /* RTCStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCStream.m; sourceTree = "<group>"; };
 		F0A559072118129700C2433B /* RTCVideoCapturer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoCapturer.h; sourceTree = "<group>"; };
 		F0A559082118129700C2433B /* RTCVideoCapturer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoCapturer.m; sourceTree = "<group>"; };
+		F0A5590B2118212700C2433B /* RTCView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCView.h; sourceTree = "<group>"; };
+		F0A5590C2118212700C2433B /* RTCView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCView.m; sourceTree = "<group>"; };
 		F0EBC8902114777500BE827F /* RTCEngine-ios-sdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RTCEngine-ios-sdk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0EBC8932114777500BE827F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F0EBC8942114777500BE827F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -169,6 +173,8 @@
 				F0A5590421180EE400C2433B /* RTCStream.m */,
 				F0A559072118129700C2433B /* RTCVideoCapturer.h */,
 				F0A559082118129700C2433B /* RTCVideoCapturer.m */,
+				F0A5590B2118212700C2433B /* RTCView.h */,
+				F0A5590C2118212700C2433B /* RTCView.m */,
 			);
 			path = RTCEngine;
 			sourceTree = "<group>";
@@ -183,6 +189,7 @@
 				F0A5590121180B1900C2433B /* RTCVideoProfile.h in Headers */,
 				F0A5590521180EE400C2433B /* RTCStream.h in Headers */,
 				F0A559092118129700C2433B /* RTCVideoCapturer.h in Headers */,
+				F0A5590D2118212700C2433B /* RTCView.h in Headers */,
 				F0EBC8B2211478D000BE827F /* RTCEngine.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +406,7 @@
 				F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */,
 				F0A5590621180EE400C2433B /* RTCStream.m in Sources */,
 				F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */,
+				F0A5590E2118212700C2433B /* RTCView.m in Sources */,
 				F0A5590A2118129700C2433B /* RTCVideoCapturer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,7 +559,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CLKRLU8RPY;
 				INFOPLIST_FILE = "RTCEngine-ios-sdk/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cc.dot.RTCEngine-ios-sdk";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -566,7 +577,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CLKRLU8RPY;
 				INFOPLIST_FILE = "RTCEngine-ios-sdk/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cc.dot.RTCEngine-ios-sdk";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -587,7 +601,11 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RTCEngine/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = cc.dot.RTCEngine;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -611,7 +629,11 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RTCEngine/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = cc.dot.RTCEngine;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

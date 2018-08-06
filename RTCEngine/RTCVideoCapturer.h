@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, VideoRotation){
 };
 
 
-@protocol DotCapturerConsumer <NSObject>
+@protocol RTCCapturerConsumer <NSObject>
 
 -(void) gotCVPixelBuffer:(CVPixelBufferRef _Nonnull) sampleBuffer
                 rotation:(VideoRotation)rotation;
@@ -27,5 +27,9 @@ typedef NS_ENUM(NSInteger, VideoRotation){
 
 
 @interface RTCVideoCapturer : NSObject
+
+@property(atomic, assign) id<RTCCapturerConsumer> _Nullable videoConsumer;
+
+-(void) sendCVPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(VideoRotation)rotation;
 
 @end
