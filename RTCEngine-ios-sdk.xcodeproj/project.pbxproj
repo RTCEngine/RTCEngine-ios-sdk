@@ -18,6 +18,14 @@
 		F0A5590A2118129700C2433B /* RTCVideoCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A559082118129700C2433B /* RTCVideoCapturer.m */; };
 		F0A5590D2118212700C2433B /* RTCView.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5590B2118212700C2433B /* RTCView.h */; };
 		F0A5590E2118212700C2433B /* RTCView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5590C2118212700C2433B /* RTCView.m */; };
+		F0A5591121182AB300C2433B /* RTCAudioManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5590F21182AB300C2433B /* RTCAudioManager.h */; };
+		F0A5591221182AB300C2433B /* RTCAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5591021182AB300C2433B /* RTCAudioManager.m */; };
+		F0A5591C211832A900C2433B /* RTCIceCandidate+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5591A211832A900C2433B /* RTCIceCandidate+JSON.h */; };
+		F0A5591D211832A900C2433B /* RTCIceCandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5591B211832A900C2433B /* RTCIceCandidate+JSON.m */; };
+		F0A55920211833E700C2433B /* RTCIceServer+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5591E211833E700C2433B /* RTCIceServer+JSON.h */; };
+		F0A55921211833E700C2433B /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5591F211833E700C2433B /* RTCIceServer+JSON.m */; };
+		F0A559242118349500C2433B /* RTCSessionDescription+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A559222118349500C2433B /* RTCSessionDescription+JSON.h */; };
+		F0A559252118349500C2433B /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A559232118349500C2433B /* RTCSessionDescription+JSON.m */; };
 		F0EBC8952114777500BE827F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8942114777500BE827F /* AppDelegate.m */; };
 		F0EBC8982114777500BE827F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8972114777500BE827F /* ViewController.m */; };
 		F0EBC89B2114777500BE827F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0EBC8992114777500BE827F /* Main.storyboard */; };
@@ -69,6 +77,14 @@
 		F0A559082118129700C2433B /* RTCVideoCapturer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoCapturer.m; sourceTree = "<group>"; };
 		F0A5590B2118212700C2433B /* RTCView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCView.h; sourceTree = "<group>"; };
 		F0A5590C2118212700C2433B /* RTCView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCView.m; sourceTree = "<group>"; };
+		F0A5590F21182AB300C2433B /* RTCAudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RTCAudioManager.h; path = audio/RTCAudioManager.h; sourceTree = "<group>"; };
+		F0A5591021182AB300C2433B /* RTCAudioManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RTCAudioManager.m; path = audio/RTCAudioManager.m; sourceTree = "<group>"; };
+		F0A5591A211832A900C2433B /* RTCIceCandidate+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCIceCandidate+JSON.h"; sourceTree = "<group>"; };
+		F0A5591B211832A900C2433B /* RTCIceCandidate+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceCandidate+JSON.m"; sourceTree = "<group>"; };
+		F0A5591E211833E700C2433B /* RTCIceServer+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCIceServer+JSON.h"; sourceTree = "<group>"; };
+		F0A5591F211833E700C2433B /* RTCIceServer+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceServer+JSON.m"; sourceTree = "<group>"; };
+		F0A559222118349500C2433B /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
+		F0A559232118349500C2433B /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
 		F0EBC8902114777500BE827F /* RTCEngine-ios-sdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RTCEngine-ios-sdk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0EBC8932114777500BE827F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F0EBC8942114777500BE827F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -125,6 +141,19 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F0A559192118327400C2433B /* category */ = {
+			isa = PBXGroup;
+			children = (
+				F0A5591A211832A900C2433B /* RTCIceCandidate+JSON.h */,
+				F0A5591B211832A900C2433B /* RTCIceCandidate+JSON.m */,
+				F0A5591E211833E700C2433B /* RTCIceServer+JSON.h */,
+				F0A5591F211833E700C2433B /* RTCIceServer+JSON.m */,
+				F0A559222118349500C2433B /* RTCSessionDescription+JSON.h */,
+				F0A559232118349500C2433B /* RTCSessionDescription+JSON.m */,
+			);
+			path = category;
+			sourceTree = "<group>";
+		};
 		F0EBC8872114777500BE827F = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +193,7 @@
 		F0EBC8AF211478D000BE827F /* RTCEngine */ = {
 			isa = PBXGroup;
 			children = (
+				F0A559192118327400C2433B /* category */,
 				F0EBC8B0211478D000BE827F /* RTCEngine.h */,
 				F0EBC8B1211478D000BE827F /* Info.plist */,
 				F0A558FD2118095E00C2433B /* RTCEngine.m */,
@@ -175,6 +205,8 @@
 				F0A559082118129700C2433B /* RTCVideoCapturer.m */,
 				F0A5590B2118212700C2433B /* RTCView.h */,
 				F0A5590C2118212700C2433B /* RTCView.m */,
+				F0A5590F21182AB300C2433B /* RTCAudioManager.h */,
+				F0A5591021182AB300C2433B /* RTCAudioManager.m */,
 			);
 			path = RTCEngine;
 			sourceTree = "<group>";
@@ -186,11 +218,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0A5591C211832A900C2433B /* RTCIceCandidate+JSON.h in Headers */,
 				F0A5590121180B1900C2433B /* RTCVideoProfile.h in Headers */,
+				F0A559242118349500C2433B /* RTCSessionDescription+JSON.h in Headers */,
 				F0A5590521180EE400C2433B /* RTCStream.h in Headers */,
 				F0A559092118129700C2433B /* RTCVideoCapturer.h in Headers */,
+				F0A5591121182AB300C2433B /* RTCAudioManager.h in Headers */,
 				F0A5590D2118212700C2433B /* RTCView.h in Headers */,
 				F0EBC8B2211478D000BE827F /* RTCEngine.h in Headers */,
+				F0A55920211833E700C2433B /* RTCIceServer+JSON.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,9 +439,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0A5591221182AB300C2433B /* RTCAudioManager.m in Sources */,
 				F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */,
 				F0A5590621180EE400C2433B /* RTCStream.m in Sources */,
 				F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */,
+				F0A55921211833E700C2433B /* RTCIceServer+JSON.m in Sources */,
+				F0A5591D211832A900C2433B /* RTCIceCandidate+JSON.m in Sources */,
+				F0A559252118349500C2433B /* RTCSessionDescription+JSON.m in Sources */,
 				F0A5590E2118212700C2433B /* RTCView.m in Sources */,
 				F0A5590A2118129700C2433B /* RTCVideoCapturer.m in Sources */,
 			);

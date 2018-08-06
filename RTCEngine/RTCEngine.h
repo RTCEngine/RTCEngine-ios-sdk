@@ -14,11 +14,11 @@ FOUNDATION_EXPORT double RTCEngineVersionNumber;
 //! Project version string for RTCEngine.
 FOUNDATION_EXPORT const unsigned char RTCEngineVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <RTCEngine/PublicHeader.h>
 
 
 @import WebRTC;
 
+#import "RTCView.h"
 #import "RTCStream.h"
 #import "RTCVideoProfile.h"
 #import "RTCVideoCapturer.h"
@@ -92,7 +92,7 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 
 -(void)generateToken:(NSString* _Nonnull)tokenUrl
-               appsecret:(NSString* _Nonnull )appsecret
+               appkey:(NSString* _Nonnull )appkey
                     room:(NSString* _Nonnull )room
                   userId:(NSString* _Nonnull )userId
                withBlock:(void (^_Nonnull)(NSString* token,NSError* error))tokenBlock;
