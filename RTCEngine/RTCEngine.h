@@ -62,6 +62,7 @@ typedef NS_ENUM(NSInteger,RTCEngineCaptureMode){
 
 
 typedef NS_ENUM(NSInteger, RTCEngineStatus) {
+    RTCEngineStatusNew,
     RTCEngineStatusConnecting,
     RTCEngineStatusConnected,
     RTCEngineStatusDisConnected,

@@ -26,6 +26,8 @@
 		F0A55921211833E700C2433B /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5591F211833E700C2433B /* RTCIceServer+JSON.m */; };
 		F0A559242118349500C2433B /* RTCSessionDescription+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A559222118349500C2433B /* RTCSessionDescription+JSON.h */; };
 		F0A559252118349500C2433B /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A559232118349500C2433B /* RTCSessionDescription+JSON.m */; };
+		F0A55929211836E600C2433B /* RTCStream+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A55928211836E600C2433B /* RTCStream+Internal.h */; };
+		F0A5592B2118370500C2433B /* RTCView+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A5592A2118370500C2433B /* RTCView+Internal.h */; };
 		F0EBC8952114777500BE827F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8942114777500BE827F /* AppDelegate.m */; };
 		F0EBC8982114777500BE827F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0EBC8972114777500BE827F /* ViewController.m */; };
 		F0EBC89B2114777500BE827F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0EBC8992114777500BE827F /* Main.storyboard */; };
@@ -85,6 +87,8 @@
 		F0A5591F211833E700C2433B /* RTCIceServer+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceServer+JSON.m"; sourceTree = "<group>"; };
 		F0A559222118349500C2433B /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
 		F0A559232118349500C2433B /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
+		F0A55928211836E600C2433B /* RTCStream+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCStream+Internal.h"; sourceTree = "<group>"; };
+		F0A5592A2118370500C2433B /* RTCView+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCView+Internal.h"; sourceTree = "<group>"; };
 		F0EBC8902114777500BE827F /* RTCEngine-ios-sdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RTCEngine-ios-sdk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0EBC8932114777500BE827F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F0EBC8942114777500BE827F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -154,6 +158,15 @@
 			path = category;
 			sourceTree = "<group>";
 		};
+		F0A559272118369900C2433B /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				F0A55928211836E600C2433B /* RTCStream+Internal.h */,
+				F0A5592A2118370500C2433B /* RTCView+Internal.h */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
 		F0EBC8872114777500BE827F = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +206,7 @@
 		F0EBC8AF211478D000BE827F /* RTCEngine */ = {
 			isa = PBXGroup;
 			children = (
+				F0A559272118369900C2433B /* internal */,
 				F0A559192118327400C2433B /* category */,
 				F0EBC8B0211478D000BE827F /* RTCEngine.h */,
 				F0EBC8B1211478D000BE827F /* Info.plist */,
@@ -223,7 +237,9 @@
 				F0A559242118349500C2433B /* RTCSessionDescription+JSON.h in Headers */,
 				F0A5590521180EE400C2433B /* RTCStream.h in Headers */,
 				F0A559092118129700C2433B /* RTCVideoCapturer.h in Headers */,
+				F0A55929211836E600C2433B /* RTCStream+Internal.h in Headers */,
 				F0A5591121182AB300C2433B /* RTCAudioManager.h in Headers */,
+				F0A5592B2118370500C2433B /* RTCView+Internal.h in Headers */,
 				F0A5590D2118212700C2433B /* RTCView.h in Headers */,
 				F0EBC8B2211478D000BE827F /* RTCEngine.h in Headers */,
 				F0A55920211833E700C2433B /* RTCIceServer+JSON.h in Headers */,
