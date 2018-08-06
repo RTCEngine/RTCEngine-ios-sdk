@@ -17,3 +17,14 @@ FOUNDATION_EXPORT const unsigned char RTCEngineVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <RTCEngine/PublicHeader.h>
 
 
+@import WebRTC;
+
+
+@interface RTCEngine : NSObject
+
+
+
+@end
+
+
+
