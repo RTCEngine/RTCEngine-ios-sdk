@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		21C53331F89DF3C68002FDC0 /* Pods_RTCEngine_ios_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EA786804A7B01D0165DEA2 /* Pods_RTCEngine_ios_sdk.framework */; };
 		7EBB9B3056FA204A69D69EB0 /* Pods_RTCEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43815B14C6E5BA4DDB82D903 /* Pods_RTCEngine.framework */; };
+		F0706EBE21197763007C713E /* AuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EBC21197763007C713E /* AuthToken.h */; };
+		F0706EBF21197763007C713E /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EBD21197763007C713E /* AuthToken.m */; };
+		F0706EC2211978C2007C713E /* StringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EC0211978C2007C713E /* StringUtils.h */; };
+		F0706EC3211978C2007C713E /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EC1211978C2007C713E /* StringUtils.m */; };
 		F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A558FD2118095E00C2433B /* RTCEngine.m */; };
 		F0A5590121180B1900C2433B /* RTCVideoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A558FF21180B1900C2433B /* RTCVideoProfile.h */; };
 		F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5590021180B1900C2433B /* RTCVideoProfile.m */; };
@@ -70,6 +74,10 @@
 		43815B14C6E5BA4DDB82D903 /* Pods_RTCEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RTCEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B2480BAB8BC96208C9ED0E8 /* Pods-RTCEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine/Pods-RTCEngine.debug.xcconfig"; sourceTree = "<group>"; };
 		ADEFC6E294897B5192CE98E5 /* Pods-RTCEngine-ios-sdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine-ios-sdk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk.debug.xcconfig"; sourceTree = "<group>"; };
+		F0706EBC21197763007C713E /* AuthToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthToken.h; sourceTree = "<group>"; };
+		F0706EBD21197763007C713E /* AuthToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthToken.m; sourceTree = "<group>"; };
+		F0706EC0211978C2007C713E /* StringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
+		F0706EC1211978C2007C713E /* StringUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
 		F0A558FD2118095E00C2433B /* RTCEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCEngine.m; sourceTree = "<group>"; };
 		F0A558FF21180B1900C2433B /* RTCVideoProfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoProfile.h; sourceTree = "<group>"; };
 		F0A5590021180B1900C2433B /* RTCVideoProfile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoProfile.m; sourceTree = "<group>"; };
@@ -145,6 +153,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F0706EBB21197736007C713E /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				F0706EBC21197763007C713E /* AuthToken.h */,
+				F0706EBD21197763007C713E /* AuthToken.m */,
+				F0706EC0211978C2007C713E /* StringUtils.h */,
+				F0706EC1211978C2007C713E /* StringUtils.m */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		F0A559192118327400C2433B /* category */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +225,7 @@
 		F0EBC8AF211478D000BE827F /* RTCEngine */ = {
 			isa = PBXGroup;
 			children = (
+				F0706EBB21197736007C713E /* utils */,
 				F0A559272118369900C2433B /* internal */,
 				F0A559192118327400C2433B /* category */,
 				F0EBC8B0211478D000BE827F /* RTCEngine.h */,
@@ -232,12 +252,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0706EBE21197763007C713E /* AuthToken.h in Headers */,
 				F0A5591C211832A900C2433B /* RTCIceCandidate+JSON.h in Headers */,
 				F0A5590121180B1900C2433B /* RTCVideoProfile.h in Headers */,
 				F0A559242118349500C2433B /* RTCSessionDescription+JSON.h in Headers */,
 				F0A5590521180EE400C2433B /* RTCStream.h in Headers */,
 				F0A559092118129700C2433B /* RTCVideoCapturer.h in Headers */,
 				F0A55929211836E600C2433B /* RTCStream+Internal.h in Headers */,
+				F0706EC2211978C2007C713E /* StringUtils.h in Headers */,
 				F0A5591121182AB300C2433B /* RTCAudioManager.h in Headers */,
 				F0A5592B2118370500C2433B /* RTCView+Internal.h in Headers */,
 				F0A5590D2118212700C2433B /* RTCView.h in Headers */,
@@ -456,6 +478,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0A5591221182AB300C2433B /* RTCAudioManager.m in Sources */,
+				F0706EC3211978C2007C713E /* StringUtils.m in Sources */,
+				F0706EBF21197763007C713E /* AuthToken.m in Sources */,
 				F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */,
 				F0A5590621180EE400C2433B /* RTCStream.m in Sources */,
 				F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */,

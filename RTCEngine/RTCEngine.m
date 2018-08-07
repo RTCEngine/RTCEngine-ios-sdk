@@ -63,6 +63,21 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+-(void)joinRoomWithToken:(NSString *)token
+{
+    
+}
+
+-(void) addStream:(RTCStream *)stream
+{
+    if (_status != RTCEngineStatusConnected) {
+        return
+    }
+    
+    
+}
+
+
 
 
 
