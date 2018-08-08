@@ -12,7 +12,11 @@
 #import "AuthToken.h"
 
 @import WebRTC;
+@import SocketIO;
 
+#import <SocketIO/SocketIO-Swift.h>
+
+#import "RTCMediaConstraintUtil.h"
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
@@ -23,6 +27,24 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     NSString    *localUserId;
 }
 
+@property (nonatomic, strong) RTCVideoSource* videoSource;
+@property (nonatomic, strong) RTCAudioTrack* localAudioTrack;
+@property (nonatomic, strong) RTCVideoTrack* localVideoTrack;
+
+@property (nonatomic, strong) NSMutableDictionary* localStreams;
+@property (nonatomic, strong) NSMutableDictionary* remoteStreams;
+
+@property (nonatomic, assign) NSUInteger retryCount;
+@property (nonatomic, strong) RTCPeerConnection *peerconnection;
+@property (nonatomic, strong) AuthToken*  authToken;
+@property (nonatomic, strong) NSArray<RTCIceServer*> *iceServers;
+@property (nonatomic)   BOOL   closed;
+@property (nonatomic)  NSOperationQueue*  operationQueue;
+@property (atomic)  BOOL iceConnected;
+
+@property (nonatomic, strong) SocketIOClient *socket;
+@property (nonatomic, strong) RTCPeerConnectionFactory *connectionFactory;
+
 @end
 
 @implementation RTCEngine
@@ -32,11 +54,20 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     
     if (self = [super init]) {
-        self.delegate = delegate;
+        _delegate = delegate;
         _status = RTCEngineStatusNew;
+        
         RTCInitializeSSL();
         
-        // TODO  init logger
+        _localStreams = [NSMutableDictionary dictionary];
+        _remoteStreams = [NSMutableDictionary dictionary];
+        
+        _operationQueue = [[NSOperationQueue alloc] init];
+        [_operationQueue setMaxConcurrentOperationCount:1];
+        
+        _connectionFactory = [[RTCPeerConnectionFactory alloc] init];
+        _iceConnected = false;
+        _closed = false;
     }
     
     return self;
@@ -83,7 +114,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     roomId = authToken.room;
     localUserId = authToken.userid;
+    _authToken = authToken;
     
+    [self setupSignlingClient];
 }
 
 -(void) addStream:(RTCStream *)stream
@@ -100,10 +133,111 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 #pragma mark - internal
 
+- (void) setupSignlingClient
+{
+    
+    NSURL* url = [[NSURL alloc] initWithString:_authToken.wsURL];
+    SocketManager* manager = [[SocketManager alloc] initWithSocketURL:url
+                                                               config:@{@"log": @YES,
+                                                                        @"compress": @YES,
+                                                                        @"forceWebsockets":@YES,
+                                                                        @"reconnectAttempts":@5,
+                                                                        @"reconnectWait":@10000}];
+    
+    _socket = manager.defaultSocket;
+    
+    [_socket on:@"connect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }];
+    
+    [_socket on:@"error" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"disconnect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"reconnect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"joined" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"offer" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"answer" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"peerConnected" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"streamAdded" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"configure" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+    
+    [_socket on:@"message" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+        
+    }]
+}
 
 
-
-
+-(void) join
+{
+    BOOL planb = TRUE;
+    RTCConfiguration *config = [[RTCConfiguration alloc] init];
+    config.iceServers = @[];
+    config.bundlePolicy = RTCBundlePolicyMaxBundle;
+    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
+    config.iceTransportPolicy = RTCIceTransportPolicyAll;
+    
+    
+    RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
+    RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
+                                                                                constraints:connectionconstraints
+                                                                                   delegate:nil];
+    
+    peerconnection.delegate = self;
+    RTCMediaConstraints *offerConstraints = [RTCMediaConstraintUtil offerConstraints];
+    __weak id weakSelf = self;
+    [peerconnection offerForConstraints:offerConstraints completionHandler:^(RTCSessionDescription * _Nullable sdp, NSError * _Nullable error) {
+        
+        if (error) {
+            return;
+        }
+        
+        [peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+            NSDictionary *data = @{
+                                   @"appkey":@"appkey",
+                                   @"room":_authToken.room,
+                                   @"user":_authToken.userid,
+                                   @"token":_authToken.token,
+                                   @"planb":@(planb),
+                                   @"sdp":[sdp sdp]
+                                   };
+            [_socket emit:@"join" with:@[data]];
+        }]
+        
+    }];
+    
+    _peerconnection = peerconnection;
+    
+    
+}
 
 #pragma mark - delegate
 
