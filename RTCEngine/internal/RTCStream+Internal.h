@@ -22,6 +22,9 @@
 @property (nonatomic, strong) RTCAudioTrack* audioTrack;
 @property (nonatomic, strong) RTCVideoTrack* videoTrack;
 
+@property (nonatomic, strong) RTCRtpSender* audioSender;
+@property (nonatomic, strong) RTCRtpSender* videoSender;
+
 @property(nonatomic, copy, readwrite) NSString* peerId;
 @property(nonatomic, copy, readwrite) NSString* streamId;
 
@@ -41,6 +44,7 @@
 
 -(void)setMaxBitrate;
 
+-(NSDictionary*)dumps();
 
 @end
 

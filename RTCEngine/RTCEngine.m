@@ -119,6 +119,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [self setupSignlingClient];
 }
 
+
 - (void) addStream:(RTCStream *)stream
 {
     if (_status != RTCEngineStatusConnected) {
@@ -155,7 +156,36 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-
+-(void)removeStream:(RTCStream *)stream
+{
+    if (_status != RTCEngineStatusConnected) {
+        return
+    }
+    
+    if (![_localStreams objectForKey:stream.streamId]) {
+        return;
+    }
+    
+    [_localStreams removeObjectForKey:stream.streamId];
+    
+    if (!_peerconnection) {
+        return;
+    }
+    
+    if (stream.audioSender) {
+        [_peerconnection removeTrack:stream.audioSender];
+    }
+    if (stream.videoSender){
+        [_peerconnection removeTrack:stream.videoSender];
+    }
+    
+    [self removeStreamInternal:stream];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didRemoveLocalStream:stream];
+    });
+   
+}
 
 #pragma mark - internal
 
@@ -231,7 +261,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
     config.iceTransportPolicy = RTCIceTransportPolicyAll;
-    
+    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
     RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
@@ -290,12 +320,38 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 -(void) addStreamInternal:(RTCStream *)stream
 {
     
+    RTCMediaConstraints *offerConstraints = [RTCMediaConstraintUtil offerConstraints];
+    [_peerconnection offerForConstraints:offerConstraints completionHandler:^(RTCSessionDescription * _Nullable sdp, NSError * _Nullable error) {
+        if (error) {
+            return;
+        }
+        [_peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+            NSDictionary *data = @{
+                                   @"stream":[stream dumps],
+                                   @"sdp": [sdp sdp]
+                                   }
+            [_socket emit:@"addStream" with:@[data]];
+        }]
+    }]
 }
 
 -(void) removeStreamInternal:(RTCStream *)stream
 {
-    
+    RTCMediaConstraints *offerConstraints = [RTCMediaConstraintUtil offerConstraints];
+    [_peerconnection offerForConstraints:offerConstraints completionHandler:^(RTCSessionDescription * _Nullable sdp, NSError * _Nullable error) {
+        if (error) {
+            return;
+        }
+        [_peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+            NSDictionary *data = @{
+                                   @"stream":[stream dumps],
+                                   @"sdp": [sdp sdp]
+                                   }
+            [_socket emit:@"removeStream" with:@[data]];
+        }]
+    }]
 }
+
 
 #pragma mark - delegate
 
@@ -362,7 +418,18 @@ didRemoveIceCandidates:(NSArray<RTCIceCandidate *> *)candidates
     // do nothing
 }
 
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
+{
+    
+}
 
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+        didAddReceiver:(RTCRtpReceiver *)rtpReceiver
+               streams:(NSArray<RTCMediaStream *> *)mediaStreams
+{
+    
+}
 
 @end
 
