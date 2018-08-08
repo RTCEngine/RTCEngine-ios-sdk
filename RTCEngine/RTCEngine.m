@@ -18,6 +18,7 @@
 
 #import "RTCMediaConstraintUtil.h"
 #import "RTCSessionDescription+JSON.h"
+#import "RTCStream+Internal.h"
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
@@ -29,8 +30,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 @property (nonatomic, strong) RTCVideoSource* videoSource;
-@property (nonatomic, strong) RTCAudioTrack* localAudioTrack;
-@property (nonatomic, strong) RTCVideoTrack* localVideoTrack;
 
 @property (nonatomic, strong) NSMutableDictionary* localStreams;
 @property (nonatomic, strong) NSMutableDictionary* remoteStreams;
@@ -120,13 +119,39 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [self setupSignlingClient];
 }
 
--(void) addStream:(RTCStream *)stream
+- (void) addStream:(RTCStream *)stream
 {
     if (_status != RTCEngineStatusConnected) {
         return
     }
     
+    if ([_localStreams objectForKey:stream.streamId]) {
+        NSLog(@"stream already in");
+        return;
+    }
     
+    NSBlockOperation *blockOP = [NSBlockOperation blockOperationWithBlock:^{
+        
+        [stream setupLocalMedia];
+        
+        [_localStreams setObject:stream forKey:stream.streamId];
+        
+        if (stream.stream != nil) {
+            if (stream.videoTrack) {
+                [_peerconnection addTrack:stream.videoTrack streamIds:@[stream.streamId]];
+            }
+            if (stream.audioTrack) {
+                [_peerconnection addTrack:stream.audioTrack streamIds:@[stream.streamId]];
+            }
+        }
+        
+        stream.peerId = _authToken.userid;
+        [stream setMaxBitrate];
+        
+        [self addStreamInternal:stream];
+    }];
+    
+    [_operationQueue addOperation:blockOP];
 }
 
 
@@ -259,7 +284,17 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         }
     }];
     
-    // todo change the state 
+    // todo change the state
+}
+
+-(void) addStreamInternal:(RTCStream *)stream
+{
+    
+}
+
+-(void) removeStreamInternal:(RTCStream *)stream
+{
+    
 }
 
 #pragma mark - delegate

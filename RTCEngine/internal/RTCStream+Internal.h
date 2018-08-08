@@ -6,8 +6,41 @@
 //  Copyright © 2018 RTCEngine. All rights reserved.
 //
 
-#ifndef RTCStream_Internal_h
-#define RTCStream_Internal_h
+#import "RTCStream.h"
 
 
-#endif /* RTCStream_Internal_h */
+@import WebRTC;
+
+@class RTCView;
+
+@interface RTCStream() {
+    
+}
+
+@property(nonatomic, strong) RTCMediaStream* stream;
+
+@property (nonatomic, strong) RTCAudioTrack* audioTrack;
+@property (nonatomic, strong) RTCVideoTrack* videoTrack;
+
+@property(nonatomic, copy, readwrite) NSString* peerId;
+@property(nonatomic, copy, readwrite) NSString* streamId;
+
+@property (nonatomic,assign,readwrite) BOOL local;
+@property (nonatomic,assign,readwrite) BOOL video;
+@property (nonatomic,assign,readwrite) BOOL audio;
+@property (nonatomic,retain,readwrite) RTCView* view;
+@property (nonatomic,weak) RTCPeerConnection* peerconnection;
+
+
+-(void)onMuteAudio:(BOOL)muted;
+
+-(void)onMuteVideo:(BOOL)muted;
+
+
+-(void)close;
+
+-(void)setMaxBitrate;
+
+
+@end
+
