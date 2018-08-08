@@ -17,6 +17,7 @@
 #import <SocketIO/SocketIO-Swift.h>
 
 #import "RTCMediaConstraintUtil.h"
+#import "RTCSessionDescription+JSON.h"
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
@@ -145,10 +146,11 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                                                         @"reconnectWait":@10000}];
     
     _socket = manager.defaultSocket;
-    
+    __weak id weakSelf = self;
     [_socket on:@"connect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
-        
+        [weakSelf join];
     }];
+    
     
     [_socket on:@"error" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
         
@@ -229,14 +231,35 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                    @"planb":@(planb),
                                    @"sdp":[sdp sdp]
                                    };
+            
             [_socket emit:@"join" with:@[data]];
         }]
         
     }];
     
     _peerconnection = peerconnection;
+}
+
+
+- (void) handleJoined:(NSDictionary* data)
+{
     
+    // todo handle peers
+    NSString* sdp = data[@"sdp"];
     
+    RTCSessionDescription *answer = [RTCSessionDescription
+                                     descriptionFromJSONDictionary:@{
+                                                                     @"sdp":sdp,
+                                                                     @"type":@"answer"}];
+    __weak id weakSelf = self;
+    
+    [_peerconnection setRemoteDescription:answer completionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            return;
+        }
+    }];
+    
+    // todo change the state 
 }
 
 #pragma mark - delegate
