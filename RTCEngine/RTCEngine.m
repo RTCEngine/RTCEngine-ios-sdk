@@ -8,13 +8,16 @@
 
 #import "RTCEngine.h"
 
+
+#import "AuthToken.h"
+
 @import WebRTC;
 
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
 
-@interface RTCEngine () <>
+@interface RTCEngine () <RTCPeerConnectionDelegate>
 {
     NSString    *roomId;
     NSString    *localUserId;
@@ -65,6 +68,21 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 -(void)joinRoomWithToken:(NSString *)token
 {
+    NSParameterAssert(token);
+    
+    AuthToken* authToken = [AuthToken parseToken:token];
+    
+    if (AuthToken == nil) {
+        [self.delegate rtcengine:self didOccurError:RTCEngine_Error_TokenError];
+        return;
+    }
+    
+    if (_status == RTCEngineStatusConnected) {
+        return;
+    }
+    
+    roomId = authToken.room;
+    localUserId = authToken.userid;
     
 }
 
@@ -79,6 +97,78 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 
 
+
+#pragma mark - internal
+
+
+
+
+
+
+#pragma mark - delegate
+
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeSignalingState:(RTCSignalingState)stateChanged
+{
+    
+    
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
+{
+    
+    
+}
+
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection didRemoveStream:(RTCMediaStream *)stream
+{
+    
+    
+}
+
+/** Called when negotiation is needed, for example ICE has restarted. */
+- (void)peerConnectionShouldNegotiate:(RTCPeerConnection *)peerConnection
+{
+    
+    
+}
+
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeIceConnectionState:(RTCIceConnectionState)newState
+{
+    
+    
+}
+
+/** Called any time the IceGatheringState changes. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeIceGatheringState:(RTCIceGatheringState)newState
+{
+    // do nothing
+}
+
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didGenerateIceCandidate:(RTCIceCandidate *)candidate
+{
+    // do nothing
+}
+
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didRemoveIceCandidates:(NSArray<RTCIceCandidate *> *)candidates
+{
+    // do nothing
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+    didOpenDataChannel:(RTCDataChannel *)dataChannel
+{
+    // do nothing
+}
 
 
 
