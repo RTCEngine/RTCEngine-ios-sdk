@@ -202,52 +202,55 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     _socket = manager.defaultSocket;
     __weak id weakSelf = self;
-    [_socket on:@"connect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"connect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         [weakSelf join];
     }];
     
     
-    [_socket on:@"error" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"error" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"disconnect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"disconnect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"reconnect" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"reconnect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"joined" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"joined" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handleJoined:_data];
+    }]
+    
+    [_socket on:@"offer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handleOffer:_data];
+    }]
+    
+    [_socket on:@"answer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handleAnswer:_data];
+    }]
+    
+    [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"offer" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"peerConnected" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"answer" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"streamAdded" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"configure" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
     
-    [_socket on:@"peerConnected" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
-        
-    }]
-    
-    [_socket on:@"streamAdded" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
-        
-    }]
-    
-    [_socket on:@"configure" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
-        
-    }]
-    
-    [_socket on:@"message" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"message" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
     }]
 }
@@ -296,7 +299,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleJoined:(NSDictionary* data)
+- (void) handleJoined:(NSDictionary*) data
 {
     
     // todo handle peers
@@ -314,8 +317,40 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         }
     }];
     
-    // todo change the state
+    [self setStatus:RTCEngineStatusConnected];
 }
+
+- (void) handleOffer:(NSDictionary*)data
+{
+    
+}
+
+-(void) handleAnswer:(NSDictionary*)data
+{
+    
+}
+
+-(void) handlePeerRemoved:(NSDictionary*)data
+{
+    
+}
+
+-(void) handlePeerConnected:(NSDictionary*)data
+{
+    
+}
+
+-(void) handleStreamAdded:(NSDictionary*)data
+{
+    
+}
+
+
+-(void) handleConfigure:(NSDictionary*)data
+{
+    
+}
+
 
 -(void) addStreamInternal:(RTCStream *)stream
 {
@@ -353,6 +388,20 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+-(void) setStatus:(RTCEngineStatus)newStatus
+{
+    if (_status == newStatus) {
+        return;
+    }
+    
+    _status = newStatus;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didStateChange:_status];
+    });
+}
+
+
 #pragma mark - delegate
 
 
@@ -365,7 +414,6 @@ didChangeSignalingState:(RTCSignalingState)stateChanged
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
 {
-    
     
 }
 

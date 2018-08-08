@@ -91,13 +91,6 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 -(void)enableSpeakerphone:(BOOL)enable;
 
-
--(void)generateToken:(NSString* _Nonnull)tokenUrl
-               appkey:(NSString* _Nonnull )appkey
-                    room:(NSString* _Nonnull )room
-                  userId:(NSString* _Nonnull )userId
-               withBlock:(void (^_Nonnull)(NSString* token,NSError* error))tokenBlock;
-
 @end
 
 
@@ -119,6 +112,8 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didRemoveRemoteStream:(RTCStream *) stream;
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didOccurError:(RTCEngineErrorCode) code;
+
+-(void) rtcengine:(RTCEngine* _Nonnull) engine  didReceiveMessage:(NSDictionary*) message;
 
 @end
 
