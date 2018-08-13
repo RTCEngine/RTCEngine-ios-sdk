@@ -9,6 +9,7 @@ target 'RTCEngine' do
   pod 'GoogleWebRTC'
   pod 'Socket.IO-Client-Swift'
   pod 'CocoaLumberjack'
+  pod 'libyuv-iOS'
 end
 
 target 'RTCEngine-ios-sdk' do

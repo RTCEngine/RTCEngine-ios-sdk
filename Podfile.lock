@@ -6,6 +6,7 @@ PODS:
   - CocoaLumberjack/Extensions (3.4.2):
     - CocoaLumberjack/Default
   - GoogleWebRTC (1.1.24168)
+  - libyuv-iOS (1.0.2)
   - Socket.IO-Client-Swift (13.3.0):
     - Starscream (~> 3.0.2)
   - Starscream (3.0.5)
@@ -13,14 +14,16 @@ PODS:
 DEPENDENCIES:
   - CocoaLumberjack
   - GoogleWebRTC
+  - libyuv-iOS
   - Socket.IO-Client-Swift
 
 SPEC CHECKSUMS:
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   GoogleWebRTC: ef935a1697f577bef4a3dbf9b5af50e894e94cc3
+  libyuv-iOS: 5a154ccc84ec754029886ecb607512731fe30640
   Socket.IO-Client-Swift: 0afb192a562db90d50e3f7f7421c06925a3f0179
   Starscream: faf918b2f2eff7d5dd21180646bf015a669673bd
 
-PODFILE CHECKSUM: 194bd105b8ef82190d1a684a49dfcbdcb60547da
+PODFILE CHECKSUM: f3d6ae2557b88d56a7d8e8d23aede0543c4c1470
 
 COCOAPODS: 1.4.0.rc.1

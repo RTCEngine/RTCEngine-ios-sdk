@@ -22,6 +22,12 @@
 		F0706ED3212169FC007C713E /* RTCExternalCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706ED1212169FC007C713E /* RTCExternalCapturer.m */; };
 		F0706ED621216C90007C713E /* RTCVideoFrameConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706ED421216C90007C713E /* RTCVideoFrameConsumer.h */; };
 		F0706ED721216C90007C713E /* RTCVideoFrameConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706ED521216C90007C713E /* RTCVideoFrameConsumer.m */; };
+		F0706EDA2121B54B007C713E /* RTCCVPixelBufferInput.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706ED82121B54B007C713E /* RTCCVPixelBufferInput.h */; };
+		F0706EDB2121B54B007C713E /* RTCCVPixelBufferInput.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706ED92121B54B007C713E /* RTCCVPixelBufferInput.m */; };
+		F0706EDE2121B5BB007C713E /* RTCVideoFaceBeautyFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EDC2121B5BB007C713E /* RTCVideoFaceBeautyFilter.h */; };
+		F0706EDF2121B5BB007C713E /* RTCVideoFaceBeautyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EDD2121B5BB007C713E /* RTCVideoFaceBeautyFilter.m */; };
+		F0706EE22121B5F6007C713E /* RTCCVPixelBufferConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EE02121B5F6007C713E /* RTCCVPixelBufferConverter.h */; };
+		F0706EE32121B5F6007C713E /* RTCCVPixelBufferConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EE12121B5F6007C713E /* RTCCVPixelBufferConverter.m */; };
 		F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A558FD2118095E00C2433B /* RTCEngine.m */; };
 		F0A5590121180B1900C2433B /* RTCVideoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = F0A558FF21180B1900C2433B /* RTCVideoProfile.h */; };
 		F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A5590021180B1900C2433B /* RTCVideoProfile.m */; };
@@ -94,6 +100,12 @@
 		F0706ED1212169FC007C713E /* RTCExternalCapturer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCExternalCapturer.m; sourceTree = "<group>"; };
 		F0706ED421216C90007C713E /* RTCVideoFrameConsumer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoFrameConsumer.h; sourceTree = "<group>"; };
 		F0706ED521216C90007C713E /* RTCVideoFrameConsumer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoFrameConsumer.m; sourceTree = "<group>"; };
+		F0706ED82121B54B007C713E /* RTCCVPixelBufferInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCCVPixelBufferInput.h; sourceTree = "<group>"; };
+		F0706ED92121B54B007C713E /* RTCCVPixelBufferInput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCCVPixelBufferInput.m; sourceTree = "<group>"; };
+		F0706EDC2121B5BB007C713E /* RTCVideoFaceBeautyFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoFaceBeautyFilter.h; sourceTree = "<group>"; };
+		F0706EDD2121B5BB007C713E /* RTCVideoFaceBeautyFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoFaceBeautyFilter.m; sourceTree = "<group>"; };
+		F0706EE02121B5F6007C713E /* RTCCVPixelBufferConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCCVPixelBufferConverter.h; sourceTree = "<group>"; };
+		F0706EE12121B5F6007C713E /* RTCCVPixelBufferConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCCVPixelBufferConverter.m; sourceTree = "<group>"; };
 		F0A558FD2118095E00C2433B /* RTCEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCEngine.m; sourceTree = "<group>"; };
 		F0A558FF21180B1900C2433B /* RTCVideoProfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoProfile.h; sourceTree = "<group>"; };
 		F0A5590021180B1900C2433B /* RTCVideoProfile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCVideoProfile.m; sourceTree = "<group>"; };
@@ -176,6 +188,8 @@
 				F0706EC1211978C2007C713E /* StringUtils.m */,
 				F0706EC6211AEA63007C713E /* RTCMediaConstraintUtil.h */,
 				F0706EC7211AEA63007C713E /* RTCMediaConstraintUtil.m */,
+				F0706EE02121B5F6007C713E /* RTCCVPixelBufferConverter.h */,
+				F0706EE12121B5F6007C713E /* RTCCVPixelBufferConverter.m */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -185,6 +199,10 @@
 			children = (
 				F0706ECB21216381007C713E /* RTCVideoFilterManager.h */,
 				F0706ECC21216381007C713E /* RTCVideoFilterManager.m */,
+				F0706ED82121B54B007C713E /* RTCCVPixelBufferInput.h */,
+				F0706ED92121B54B007C713E /* RTCCVPixelBufferInput.m */,
+				F0706EDC2121B5BB007C713E /* RTCVideoFaceBeautyFilter.h */,
+				F0706EDD2121B5BB007C713E /* RTCVideoFaceBeautyFilter.m */,
 			);
 			path = filter;
 			sourceTree = "<group>";
@@ -296,12 +314,15 @@
 				F0A5590521180EE400C2433B /* RTCStream.h in Headers */,
 				F0A55929211836E600C2433B /* RTCStream+Internal.h in Headers */,
 				F0706EC5211AE6F9007C713E /* RTCEngine+Internal.h in Headers */,
+				F0706EE22121B5F6007C713E /* RTCCVPixelBufferConverter.h in Headers */,
 				F0706EC2211978C2007C713E /* StringUtils.h in Headers */,
 				F0A5591121182AB300C2433B /* RTCAudioManager.h in Headers */,
 				F0A5592B2118370500C2433B /* RTCView+Internal.h in Headers */,
 				F0A5590D2118212700C2433B /* RTCView.h in Headers */,
 				F0EBC8B2211478D000BE827F /* RTCEngine.h in Headers */,
 				F0A55920211833E700C2433B /* RTCIceServer+JSON.h in Headers */,
+				F0706EDA2121B54B007C713E /* RTCCVPixelBufferInput.h in Headers */,
+				F0706EDE2121B5BB007C713E /* RTCVideoFaceBeautyFilter.h in Headers */,
 				F0706ECD21216381007C713E /* RTCVideoFilterManager.h in Headers */,
 				F0706EC8211AEA63007C713E /* RTCMediaConstraintUtil.h in Headers */,
 				F0706ED621216C90007C713E /* RTCVideoFrameConsumer.h in Headers */,
@@ -519,8 +540,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0A5591221182AB300C2433B /* RTCAudioManager.m in Sources */,
+				F0706EDB2121B54B007C713E /* RTCCVPixelBufferInput.m in Sources */,
 				F0706ED721216C90007C713E /* RTCVideoFrameConsumer.m in Sources */,
 				F0706EC3211978C2007C713E /* StringUtils.m in Sources */,
+				F0706EDF2121B5BB007C713E /* RTCVideoFaceBeautyFilter.m in Sources */,
 				F0706EBF21197763007C713E /* AuthToken.m in Sources */,
 				F0706EC9211AEA63007C713E /* RTCMediaConstraintUtil.m in Sources */,
 				F0A558FE2118095E00C2433B /* RTCEngine.m in Sources */,
@@ -529,6 +552,7 @@
 				F0706ECE21216381007C713E /* RTCVideoFilterManager.m in Sources */,
 				F0A5590221180B1900C2433B /* RTCVideoProfile.m in Sources */,
 				F0A55921211833E700C2433B /* RTCIceServer+JSON.m in Sources */,
+				F0706EE32121B5F6007C713E /* RTCCVPixelBufferConverter.m in Sources */,
 				F0A5591D211832A900C2433B /* RTCIceCandidate+JSON.m in Sources */,
 				F0A559252118349500C2433B /* RTCSessionDescription+JSON.m in Sources */,
 				F0A5590E2118212700C2433B /* RTCView.m in Sources */,
