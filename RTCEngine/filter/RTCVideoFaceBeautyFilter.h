@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RTCVideoFaceBeautyFilter : NSObject
+#import <GPUImage.h>
+
+@interface RTCVideoFaceBeautyFilter : GPUImageFilter
+
+@property (nonatomic, assign) CGFloat beautyLevel;
+@property (nonatomic, assign) CGFloat brightLevel;
+@property (nonatomic, assign) CGFloat toneLevel;
 
 @end
