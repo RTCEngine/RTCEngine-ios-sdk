@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RTCCVPixelBufferInput : NSObject
+#import <GPUImage.h>
+
+@interface RTCCVPixelBufferInput : GPUImageOutput
+
+- (BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer;
 
 @end
