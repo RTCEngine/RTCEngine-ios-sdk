@@ -16,6 +16,7 @@
 
 #import <SocketIO/SocketIO-Swift.h>
 
+#import "RTCEngine+Internal.h"
 #import "RTCMediaConstraintUtil.h"
 #import "RTCSessionDescription+JSON.h"
 #import "RTCStream+Internal.h"
@@ -27,6 +28,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     NSString    *roomId;
     NSString    *localUserId;
+    RTCDefaultVideoDecoderFactory *decoderFactory;
+    RTCDefaultVideoEncoderFactory *encoderFactory;
 }
 
 @property (nonatomic, strong) RTCVideoSource* videoSource;
@@ -42,8 +45,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 @property (nonatomic)  NSOperationQueue*  operationQueue;
 @property (atomic)  BOOL iceConnected;
 
-@property (nonatomic, strong) SocketIOClient *socket;
-@property (nonatomic, strong) RTCPeerConnectionFactory *connectionFactory;
 
 @end
 
@@ -65,7 +66,10 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         _operationQueue = [[NSOperationQueue alloc] init];
         [_operationQueue setMaxConcurrentOperationCount:1];
         
-        _connectionFactory = [[RTCPeerConnectionFactory alloc] init];
+        decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
+        encoderFactory = [[RTCDefaultVideoEncoderFactory alloc] init];
+        
+        _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
         _iceConnected = false;
         _closed = false;
     }
@@ -80,6 +84,10 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     @synchronized(self) {
         if (!sharedRTCEngineInstance) {
             sharedRTCEngineInstance = [[self alloc] initWithDelegate: delegate];
+        }
+        // just in case
+        if (!sharedRTCEngineInstance.delegate) {
+            sharedRTCEngineInstance.delegate = delegate;
         }
     }
     return  sharedRTCEngineInstance;

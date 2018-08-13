@@ -14,6 +14,8 @@
 #import "RTCExternalCapturer.h"
 #import "RTCVideoFilterManager.h"
 #import "RTCVideoFrameConsumer.h"
+#import "RTCEngine+Internal.h"
+#import "RTCEngine.h"
 
 @interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate>
 {
@@ -127,8 +129,99 @@
         return;
     }
     
+    RTCPeerConnectionFactory* factory = [RTCEngine sharedInstance].connectionFactory;
     
+    _stream = [factory mediaStreamWithStreamId:_streamId];
+    
+    videoFrameConsumer = [[RTCVideoFrameConsumer alloc] initWithDelegate:self];
+    
+    videoSource = [factory videoSource];
+    
+    // when we use external captuer
+    if(_videoCaptuer != nil) {
+        
+        [_videoCaptuer setVideoConsumer:self];
+        _videoTrack = [factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
+        [_stream addVideoTrack:_videoTrack];
+    } else if (_video) {
+        // todo adapter
+        //[videoSource adaptOutputFormatToWidth:<#(int)#> height:<#(int)#> fps:<#(int)#>];
+        
+        cameraCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoFrameConsumer];
+        _videoTrack = [factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
+        [_stream addVideoTrack:_videoTrack];
+        [self startCapture];
+    }
+    
+    if (_audio) {
+        RTCAudioSource* audioSource = [factory audioSourceWithConstraints:nil];
+        _audioTrack = [factory audioTrackWithSource:audioSource trackId:[[NSUUID UUID] UUIDString]];
+        
+        [_stream addAudioTrack:_audioTrack];
+    }
+    
+    if (_view != nil) {
+        [_view setStream:self];
+    }
 }
+
+
+- (AVCaptureDevice *)findDeviceForPosition:(AVCaptureDevicePosition)position {
+    NSArray<AVCaptureDevice *> *captureDevices = [RTCCameraVideoCapturer captureDevices];
+    for (AVCaptureDevice *device in captureDevices) {
+        if (device.position == position) {
+            return device;
+        }
+    }
+    return captureDevices[0];
+}
+
+- (AVCaptureDeviceFormat *)selectFormatForDevice:(AVCaptureDevice *)device {
+    NSArray<AVCaptureDeviceFormat *> *formats = [RTCCameraVideoCapturer supportedFormatsForDevice:device];
+    int targetWidth = (int)minWidth;
+    int targetHeight = (int)minHeight;
+    AVCaptureDeviceFormat *selectedFormat = nil;
+    int currentDiff = INT_MAX;
+    for (AVCaptureDeviceFormat *format in formats) {
+        CMVideoDimensions dimension = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
+        int diff = abs(targetWidth - dimension.width) + abs(targetHeight - dimension.height);
+        if (diff < currentDiff) {
+            selectedFormat = format;
+            currentDiff = diff;
+        }
+    }
+    NSAssert(selectedFormat != nil, @"No suitable capture format found.");
+    CMVideoDimensions dimension = CMVideoFormatDescriptionGetDimensions(selectedFormat.formatDescription);
+    cameraWidth = dimension.width;
+    cameraHeight = dimension.height;
+    return selectedFormat;
+}
+
+
+-(void)startCapture
+{
+    AVCaptureDevicePosition position =
+    usingFrontCamera ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    AVCaptureDevice *device = [self findDeviceForPosition:position];
+    AVCaptureDeviceFormat *format = [self selectFormatForDevice:device];
+    
+    [cameraCapturer startCaptureWithDevice:device format:format fps:frameRate];
+}
+
+
+-(void)stopCapture {
+    [cameraCapturer stopCapture];
+}
+
+-(void)switchCamera
+{
+    
+    usingFrontCamera = !usingFrontCamera;
+    if ([cameraCapturer isKindOfClass:[RTCCameraVideoCapturer class]]) {
+        [self startCapture];
+    }
+}
+
 
 
 #pragma delegate

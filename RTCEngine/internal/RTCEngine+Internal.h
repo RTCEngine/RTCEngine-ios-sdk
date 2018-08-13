@@ -6,10 +6,18 @@
 //  Copyright © 2018 RTCEngine. All rights reserved.
 //
 
-#ifndef RTCEngine_Internal_h
-#define RTCEngine_Internal_h
+@import WebRTC;
+@import SocketIO;
+
+#import <SocketIO/SocketIO-Swift.h>
+
+@interface RTCEngine () {
+    
+}
+
+@property (nonatomic, strong) SocketIOClient *socket;
+@property (nonatomic, strong) RTCPeerConnectionFactory *connectionFactory;
 
 
+@end
 
-
-#endif /* RTCEngine_Internal_h */
