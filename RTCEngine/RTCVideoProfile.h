@@ -48,7 +48,6 @@ typedef NS_ENUM(NSInteger)
 } RTCEngineVideoProfile;
 
 
-
 @interface RTCVideoProfile : NSObject
-
++(NSDictionary*)infoForProfile:(RTCEngineVideoProfile)profile;
 @end

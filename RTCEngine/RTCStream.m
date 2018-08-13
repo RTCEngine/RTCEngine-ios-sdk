@@ -166,6 +166,45 @@
 }
 
 
+-(void)shutdownLocalMedia
+{
+    
+    [self close];
+    
+}
+
+
+-(void)close
+{
+    [self stopCapture];
+    
+    if (_videoTrack ) {
+        _videoTrack = nil;
+    }
+    
+    if (_audioTrack) {
+        _audioTrack = nil;
+    }
+    
+    if (_stream) {
+        _stream = nil;
+    }
+}
+
+
+- (void) muteAudio:(BOOL)muted
+{
+    
+}
+
+
+-(void) muteVideo:(BOOL)muted
+{
+    
+}
+
+
+
 - (AVCaptureDevice *)findDeviceForPosition:(AVCaptureDevicePosition)position {
     NSArray<AVCaptureDevice *> *captureDevices = [RTCCameraVideoCapturer captureDevices];
     for (AVCaptureDevice *device in captureDevices) {
@@ -222,6 +261,19 @@
     }
 }
 
+
+
+- (void)setMaxBitrate:(NSUInteger)maxBitrate forVideoSender:(RTCRtpSender *)sender {
+    if (maxBitrate <= 0) {
+        return;
+    }
+    
+    RTCRtpParameters *parametersToModify = sender.parameters;
+    for (RTCRtpEncodingParameters *encoding in parametersToModify.encodings) {
+        encoding.maxBitrateBps = @(maxBitrate);
+    }
+    [sender setParameters:parametersToModify];
+}
 
 
 #pragma delegate
