@@ -6,8 +6,14 @@
 //  Copyright © 2018 RTCEngine. All rights reserved.
 //
 
-#ifndef RTCView_Internal_h
-#define RTCView_Internal_h
+#import "RTCView.h"
 
+@import WebRTC;
 
-#endif /* RTCView_Internal_h */
+@interface RTCView() <RTCVideoRenderer>
+
+-(UIImage*) snapshot;
+
+-(void)changeVideoSize:(CGSize)size;
+
+@end

@@ -20,12 +20,12 @@
 @interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate>
 {
     NSString*  sessionPreset;
-    NSUInteger minWidth;
-    NSUInteger minHeight;
-    NSUInteger maxWidth;
-    NSUInteger maxHeight;
-    NSUInteger maxVideoBitrate;
-    NSUInteger frameRate;
+    NSInteger minWidth;
+    NSInteger minHeight;
+    NSInteger maxWidth;
+    NSInteger maxHeight;
+    NSInteger maxVideoBitrate;
+    NSInteger frameRate;
     
     int cameraWidth;
     int cameraHeight;
@@ -94,7 +94,6 @@
 }
 
 
-
 -(void)setUseFaceBeauty:(BOOL)useFaceBeauty
 {
     _useFaceBeauty = useFaceBeauty;
@@ -119,7 +118,12 @@
 
 -(void)setupVideoProfile:(RTCEngineVideoProfile)profile
 {
-    // todo
+    
+    NSDictionary *info = [RTCVideoProfile infoForProfile:profile];
+    minWidth = [[info objectForKey:@"minWidth"] integerValue];
+    minHeight = [[info objectForKey:@"minHeight"] integerValue];
+    frameRate = [[info objectForKey:@"frameRate"] integerValue];
+    maxVideoBitrate = [[info objectForKey:@"maxVideoBitrate"] integerValue];
 }
 
 
