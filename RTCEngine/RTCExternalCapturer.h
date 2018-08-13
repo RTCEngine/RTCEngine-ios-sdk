@@ -1,12 +1,13 @@
 //
-//  RTCVideoCapturer.h
+//  RTCExternalCapturer.h
 //  RTCEngine
 //
-//  Created by xiang on 06/08/2018.
+//  Created by xiang on 13/08/2018.
 //  Copyright © 2018 RTCEngine. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+
 @import CoreVideo;
 
 typedef NS_ENUM(NSInteger, VideoRotation){
@@ -18,17 +19,16 @@ typedef NS_ENUM(NSInteger, VideoRotation){
 };
 
 
-@protocol RTCCapturerConsumer <NSObject>
+@protocol RTCExternalCapturerConsumer <NSObject>
 
--(void) gotCVPixelBuffer:(CVPixelBufferRef _Nonnull) sampleBuffer
+-(void) gotExternalCVPixelBuffer:(CVPixelBufferRef _Nonnull) sampleBuffer
                 rotation:(VideoRotation)rotation;
 
 @end
 
+@interface RTCExternalCapturer : NSObject
 
-@interface RTCVideoCapturer : NSObject
-
-@property(atomic, assign) id<RTCCapturerConsumer> _Nullable videoConsumer;
+@property(atomic, assign) id<RTCExternalCapturerConsumer> _Nullable videoConsumer;
 
 -(void) sendCVPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(VideoRotation)rotation;
 

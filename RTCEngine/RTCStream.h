@@ -10,7 +10,7 @@
 
 #import "RTCView.h"
 #import "RTCEngine.h"
-#import "RTCVideoCapturer.h"
+#import "RTCExternalCapturer.h"
 #import "RTCVideoProfile.h"
 
 
@@ -41,7 +41,7 @@
 
 @property (nonatomic,readwrite) NSMutableDictionary* _Nonnull attributes;
 @property (nonatomic,assign) RTCEngineVideoProfile  videoProfile;
-@property (nonatomic,assign) RTCVideoCapturer* _Nullable videoCaptuer;
+@property (nonatomic,assign) RTCExternalCapturer* _Nullable videoCaptuer;
 @property (nonatomic,weak) id<RTCStreamDelegate> _Nullable delegate;
 
 
