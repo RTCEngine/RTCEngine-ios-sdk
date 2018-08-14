@@ -22,6 +22,8 @@
 #import "RTCSessionDescription+JSON.h"
 #import "RTCStream+Internal.h"
 #import "RTCNetUtils.h"
+#import "RTCPeer.h"
+#import "RTCPeerManager.h"
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
@@ -30,8 +32,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     NSString    *roomId;
     NSString    *localUserId;
-    RTCDefaultVideoDecoderFactory *decoderFactory;
-    RTCDefaultVideoEncoderFactory *encoderFactory;
+    RTCDefaultVideoDecoderFactory* decoderFactory;
+    RTCDefaultVideoEncoderFactory* encoderFactory;
+    RTCPeerManager* peerManager;
 }
 
 @property (nonatomic, strong) RTCVideoSource* videoSource;
@@ -70,6 +73,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
         encoderFactory = [[RTCDefaultVideoEncoderFactory alloc] init];
+        peerManager = [[RTCPeerManager alloc] init];
         
         _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
         _iceConnected = false;
@@ -334,7 +338,12 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 - (void) handleJoined:(NSDictionary*) data
 {
     
-    // todo handle peers
+    NSArray* peers = [data valueForKeyPath:@"room.peers"];
+    
+    for(NSDictionary* peerDict in peers){
+        [peerManager updatePeer:peerDict];
+    }
+    
     NSString* sdp = data[@"sdp"];
     
     RTCSessionDescription *answer = [RTCSessionDescription
@@ -355,12 +364,63 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 - (void) handleOffer:(NSDictionary*)data
 {
+    NSArray* peers = [data valueForKeyPath:@"room.peers"];
     
+    for(NSDictionary* peerDict in peers){
+        [peerManager updatePeer:peerDict];
+    }
+    
+    NSString* sdp = data[@"sdp"];
+    
+    RTCSessionDescription *offer = [RTCSessionDescription
+                                     descriptionFromJSONDictionary:@{
+                                                                     @"sdp":sdp,
+                                                                     @"type":@"offer"}];
+    
+    [_peerconnection setRemoteDescription:offer completionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"error %@", error);
+        }
+        if (_peerconnection.signalingState == RTCSignalingStateStable) {
+            return;
+        }
+        RTCMediaConstraints* constrainst = [RTCMediaConstraintUtil answerConstraints];
+        [_peerconnection answerForConstraints:constrainst
+                            completionHandler:^(RTCSessionDescription * _Nullable sdp, NSError * _Nullable error) {
+                                if (error) {
+                                    NSLog(@"error %@", error);
+                                }
+                                
+                                [_peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+                                    if (error) {
+                                        NSLog(@"error %@", error);
+                                    }
+                                }];
+                            }]
+    }];
 }
 
 -(void) handleAnswer:(NSDictionary*)data
 {
+    NSArray* peers = [data valueForKeyPath:@"room.peers"];
     
+    for(NSDictionary* peerDict in peers){
+        [peerManager updatePeer:peerDict];
+    }
+    
+    
+    NSString* sdp = data[@"sdp"];
+    
+    RTCSessionDescription *answer = [RTCSessionDescription
+                                     descriptionFromJSONDictionary:@{
+                                                                     @"sdp":sdp,
+                                                                     @"type":@"answer"}];
+    
+    [_peerconnection setRemoteDescription:answer completionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"error %@", error);
+        }
+    }];
 }
 
 -(void) handlePeerRemoved:(NSDictionary*)data
