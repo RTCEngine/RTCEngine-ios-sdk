@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import <GPUImage.h>
+
+#import "RTCCVPixelBufferInput.h"
+#import "RTCVideoFaceBeautyFilter.h"
+#import "RTCCVPixelBufferConverter.h"
+
 @import CoreVideo;
 
 @protocol RTCVideoFilterOutputDelegate <NSObject>
