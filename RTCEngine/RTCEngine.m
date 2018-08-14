@@ -193,8 +193,20 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         [_delegate rtcengine:self didRemoveLocalStream:stream];
     });
-   
 }
+
+
+
+-(void)generateTestToken:(NSString *)tokenUrl
+               appsecret:(NSString *)appsecret
+                    room:(NSString *)room
+                  userId:(NSString *)userId
+               withBlock:(void (^)(NSString *, NSError *))tokenBlock
+{
+    
+    
+}
+
 
 #pragma mark - internal
 
@@ -327,6 +339,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }];
     
     [self setStatus:RTCEngineStatusConnected];
+    
 }
 
 - (void) handleOffer:(NSDictionary*)data

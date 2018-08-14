@@ -91,6 +91,12 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 -(void)enableSpeakerphone:(BOOL)enable;
 
+-(void)generateTestToken:(NSString* _Nonnull)tokenUrl
+               appsecret:(NSString* _Nonnull )appsecret
+                    room:(NSString* _Nonnull )room
+                  userId:(NSString* _Nonnull )userId
+               withBlock:(void (^_Nonnull)(NSString* token,NSError* error))tokenBlock;
+
 @end
 
 
