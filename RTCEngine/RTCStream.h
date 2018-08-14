@@ -39,7 +39,7 @@
 @property (nonatomic,assign) float brightLevel;
 @property (nonatomic,assign) BOOL useFaceBeauty;
 
-@property (nonatomic,readwrite) NSMutableDictionary* _Nonnull attributes;
+@property (nonatomic,readonly) NSDictionary* _Nonnull attributes;
 @property (nonatomic,assign) RTCEngineVideoProfile  videoProfile;
 @property (nonatomic,assign) RTCExternalCapturer* _Nullable videoCaptuer;
 @property (nonatomic,weak) id<RTCStreamDelegate> _Nullable delegate;

@@ -20,6 +20,7 @@
 #import "RTCEngine+Internal.h"
 #import "RTCMediaConstraintUtil.h"
 #import "RTCSessionDescription+JSON.h"
+#import "RTCStream.h"
 #import "RTCStream+Internal.h"
 #import "RTCNetUtils.h"
 #import "RTCPeer.h"
@@ -161,7 +162,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         }
         
         stream.peerId = _authToken.userid;
+        stream.engine = self;
         [stream setMaxBitrate];
+
         
         [self addStreamInternal:stream];
     }];
@@ -271,23 +274,30 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }]
     
     [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handlePeerRemoved:_data];
     }]
     
     [_socket on:@"peerConnected" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handlePeerConnected:_data];
     }]
     
     [_socket on:@"streamAdded" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handleStreamAdded:_data];
     }]
     
     [_socket on:@"configure" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        [weakSelf handleConfigure:_data];
     }]
     
     [_socket on:@"message" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate rtcengine:self didReceiveMessage:_data];
+        });
     }]
 }
 
@@ -453,17 +463,36 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     if(!msid){
         return;
     }
-    RTCStream* stream = [_localStreams objectForKey:msid];
+    RTCStream* localStream = [_localStreams objectForKey:msid];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_delegate rtcengine:self didAddLocalStream:stream];
+        [_delegate rtcengine:self didAddLocalStream:localStream];
     });
 }
 
 
 -(void) handleConfigure:(NSDictionary*)data
 {
+    NSString* msid = [data objectForKey:@"msid"];
+    if(!msid){
+        return;
+    }
     
+    RTCStream* remoteStream = [_remoteStreams objectForKey:msid];
+    
+    if(!remoteStream) {
+        return;
+    }
+    
+    if([data objectForKey:@"video"]){
+        BOOL muted = ![[data objectForKey:@"video"] boolValue];
+        [remoteStream onMuteVideo:muted];
+    }
+    
+    if([data objectForKey:@"audio"]) {
+        BOOL muted = ![[data objectForKey:@"audio"] boolValue];
+        [remoteStream onMuteAudio:muted];
+    }
 }
 
 
@@ -517,41 +546,142 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+-(NSString*)iceConnectionState:(RTCIceConnectionState)newState
+{
+    
+    NSString*  state;
+    switch (newState) {
+        case RTCIceConnectionStateNew:
+            state = @"RTCIceConnectionStateNew";
+            break;
+        case RTCIceConnectionStateCompleted:
+            state = @"RTCIceConnectionStateCompleted";
+            break;
+        case RTCIceConnectionStateChecking:
+            state = @"RTCIceConnectionStateChecking";
+            break;
+        case RTCIceConnectionStateConnected:
+            state = @"RTCIceConnectionStateConnected";
+            break;
+        case RTCIceConnectionStateClosed:
+            state = @"RTCIceConnectionStateClosed";
+            break;
+        case RTCIceConnectionStateFailed:
+            state = @"RTCIceConnectionStateFailed";
+            break;
+        case RTCIceConnectionStateDisconnected:
+            state = @"RTCIceConnectionStateDisconnected";
+            break;
+        default:
+            state = @"";
+            break;
+    }
+    return state;
+}
+
+
 #pragma mark - delegate
 
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didChangeSignalingState:(RTCSignalingState)stateChanged
 {
-    
-    
+     NSLog(@"didChangeSignalingState %@", stateChanged);
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
 {
+    
+    
+    // add remote stream
+    
+    RTCPeer* peer = [peerManager peerForStream:stream.streamId];
+    if(!peer) {
+        NSLog(@"can not find stream %@", stream.streamId);
+        return;
+    }
+    
+    BOOL audio = stream.audioTracks.count > 0;
+    BOOL video = stream.videoTracks.count > 0;
+    
+    RTCStream* rtcStream = [[RTCStream alloc] init];
+    rtcStream.audio = audio;
+    rtcStream.video = video;
+    rtcStream.stream = stream;
+    rtcStream.streamId = stream.streamId;
+    rtcStream.local = false;
+    rtcStream.peerId = peer.peerid;
+    rtcStream.engine = self;
+
+    [_remoteStreams setObject:rtcStream forKey:rtcStream.streamId];
+
+    // todo  map attributes
+    
+    for (NSDictionary* streamData in peer.streams){
+        if([streamData[@"id"] isEqualToString:rtcStream.streamId]) {
+            NSDictionary* attributes =streamData[@"attributes"];
+            rtcStream.attributes = attributes;
+        }
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+          [_delegate rtcengine:self didAddRemoteStream:rtcStream];
+    });
     
 }
 
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection didRemoveStream:(RTCMediaStream *)stream
 {
+    // remove remote stream
     
+    RTCPeer* peer = [peerManager peerForStream:stream.streamId];
+    if(!peer) {
+        NSLog(@"can not find stream %@", stream.streamId);
+        return;
+    }
     
+    RTCStream* remoteStream = [_remoteStreams objectForKey:stream.streamId];
+    
+    if(!remoteStream){
+        return;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didRemoveRemoteStream:remoteStream];
+    });
 }
 
 /** Called when negotiation is needed, for example ICE has restarted. */
 - (void)peerConnectionShouldNegotiate:(RTCPeerConnection *)peerConnection
 {
-    
-    
+    NSLog(@"peerConnectionShouldNegotiate");
 }
 
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didChangeIceConnectionState:(RTCIceConnectionState)newState
 {
+    NSLog(@"IceConnectionState %@", [self iceConnectionState:newState]);
     
-    
+    switch (newState) {
+        case RTCIceConnectionStateNew:
+        case RTCIceConnectionStateChecking:
+            break;
+        case RTCIceConnectionStateCompleted:
+            break;
+        case RTCIceConnectionStateConnected:
+            _iceConnected = true;
+            break;
+        case RTCIceConnectionStateClosed:
+        case RTCIceConnectionStateFailed:
+        case RTCIceConnectionStateDisconnected:
+            _iceConnected = false;
+            //[self close:false];
+            break;
+        default:
+            break;
+    }
 }
 
 /** Called any time the IceGatheringState changes. */
@@ -559,13 +689,14 @@ didChangeIceConnectionState:(RTCIceConnectionState)newState
 didChangeIceGatheringState:(RTCIceGatheringState)newState
 {
     // do nothing
+    NSLog(@"didChangeIceGatheringState %@", newState);
 }
 
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didGenerateIceCandidate:(RTCIceCandidate *)candidate
 {
-    // do nothing
+    NSLog(@"didGenerateIceCandidate  %@", candidate.sdp);
 }
 
 
@@ -584,15 +715,17 @@ didRemoveIceCandidates:(NSArray<RTCIceCandidate *> *)candidates
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
 {
-    
+    NSLog(@"didStartReceivingOnTransceiver");
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
         didAddReceiver:(RTCRtpReceiver *)rtpReceiver
                streams:(NSArray<RTCMediaStream *> *)mediaStreams
 {
-    
+    NSLog(@"didAddReceiver %@", rtpReceiver.receiverId);
 }
+
+
 
 @end
 

@@ -11,6 +11,8 @@
 
 @import WebRTC;
 
+#import "RTCEngine.h"
+
 @class RTCView;
 
 @interface RTCStream() {
@@ -32,8 +34,10 @@
 @property (nonatomic,assign,readwrite) BOOL video;
 @property (nonatomic,assign,readwrite) BOOL audio;
 @property (nonatomic,retain,readwrite) RTCView* view;
-@property (nonatomic,weak) RTCPeerConnection* peerconnection;
+@property (nonatomic,readwrite) NSDictionary* attributes;
 
+@property (nonatomic,weak) RTCPeerConnection* peerconnection;
+@property (nonatomic,weak) RTCEngine* engine;
 
 -(void)onMuteAudio:(BOOL)muted;
 
@@ -43,6 +47,8 @@
 -(void)close;
 
 -(void)setMaxBitrate;
+
+-(void)_setAttributes:(NSMutableDictionary *)attributes;
 
 -(NSDictionary*)dumps();
 
