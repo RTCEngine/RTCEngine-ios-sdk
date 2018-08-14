@@ -408,7 +408,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         [peerManager updatePeer:peerDict];
     }
     
-    
     NSString* sdp = data[@"sdp"];
     
     RTCSessionDescription *answer = [RTCSessionDescription
@@ -425,17 +424,40 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 -(void) handlePeerRemoved:(NSDictionary*)data
 {
+    NSString* peer = [data valueForKeyPath:@"peer.id"];
     
+    if(!peer) {
+        return;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didLeave:peer];
+    });
 }
 
 -(void) handlePeerConnected:(NSDictionary*)data
 {
+    NSString* peer = [data valueForKeyPath:@"peer.id"];
     
+    if(!peer) {
+        return;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didJoined:peer];
+    });
 }
 
 -(void) handleStreamAdded:(NSDictionary*)data
 {
+    NSString* msid = [data objectForKey:@"msid"];
+    if(!msid){
+        return;
+    }
+    RTCStream* stream = [_localStreams objectForKey:msid];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate rtcengine:self didAddLocalStream:stream];
+    });
 }
 
 
