@@ -21,6 +21,7 @@
 #import "RTCMediaConstraintUtil.h"
 #import "RTCSessionDescription+JSON.h"
 #import "RTCStream+Internal.h"
+#import "RTCNetUtils.h"
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
@@ -203,8 +204,18 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                   userId:(NSString *)userId
                withBlock:(void (^)(NSString *, NSError *))tokenBlock
 {
+    NSDictionary *params = @{
+                             @"secret":appsecret,
+                             @"room":room,
+                             @"user":userId};
     
+    void (^tokenBlockCopy)(NSString*, NSError *) = tokenBlock;
     
+    [RTCNetUtils postWithParams:params url:tokenUrl withBlock:^(NSString *token, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            tokenBlockCopy(token, error);
+        });
+    }];
 }
 
 

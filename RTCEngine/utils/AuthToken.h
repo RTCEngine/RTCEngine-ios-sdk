@@ -10,7 +10,6 @@
 
 #import "StringUtils.h"
 
-
 static NSString* _Nonnull kAuthTokenRoomKey = @"room";
 static NSString* _Nonnull kAuthTokenUseridKey = @"user";
 static NSString* _Nonnull kAuthTokenAppkeyKey = @"appkey";
