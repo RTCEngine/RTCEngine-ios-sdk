@@ -48,8 +48,6 @@
 
 -(void)setMaxBitrate;
 
--(void)_setAttributes:(NSMutableDictionary *)attributes;
-
 -(NSDictionary*)dumps;
 
 @end

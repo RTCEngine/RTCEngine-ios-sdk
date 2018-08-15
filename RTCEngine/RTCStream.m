@@ -299,10 +299,10 @@
     return @{
              @"id":_peerId,
              @"msid":_streamId,
-             @"local":_local,
-             @"bitrate":maxVideoBitrate,
+             @"local":@(_local),
+             @"bitrate":@(maxVideoBitrate),
              @"attributes":_attributes
-             }
+             };
 }
 
 #pragma delegate
