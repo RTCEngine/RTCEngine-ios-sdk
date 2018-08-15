@@ -15,7 +15,7 @@
 @import SocketIO;
 
 
-#import <SocketIO/SocketIO-Swift.h>
+//#import <SocketIO/SocketIO-Swift.h>
 
 #import "RTCEngine+Internal.h"
 #import "RTCMediaConstraintUtil.h"
@@ -138,7 +138,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 - (void) addStream:(RTCStream *)stream
 {
     if (_status != RTCEngineStatusConnected) {
-        return
+        return;
     }
     
     if ([_localStreams objectForKey:stream.streamId]) {
@@ -176,7 +176,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 -(void)removeStream:(RTCStream *)stream
 {
     if (_status != RTCEngineStatusConnected) {
-        return
+        return;
     }
     
     if (![_localStreams objectForKey:stream.streamId]) {
@@ -248,57 +248,57 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     [_socket on:@"error" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
-    }]
+    }];
     
     [_socket on:@"disconnect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
-    }]
+    }];
     
     [_socket on:@"reconnect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
-    }]
+    }];
     
     [_socket on:@"joined" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleJoined:_data];
-    }]
+    }];
     
     [_socket on:@"offer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleOffer:_data];
-    }]
+    }];
     
     [_socket on:@"answer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleAnswer:_data];
-    }]
+    }];
     
     [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handlePeerRemoved:_data];
-    }]
+    }];
     
     [_socket on:@"peerConnected" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handlePeerConnected:_data];
-    }]
+    }];
     
     [_socket on:@"streamAdded" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleStreamAdded:_data];
-    }]
+    }];
     
     [_socket on:@"configure" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleConfigure:_data];
-    }]
+    }];
     
     [_socket on:@"message" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate rtcengine:self didReceiveMessage:_data];
         });
-    }]
+    }];
 }
 
 

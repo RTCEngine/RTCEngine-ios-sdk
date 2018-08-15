@@ -21,7 +21,7 @@ FOUNDATION_EXPORT const unsigned char RTCEngineVersionString[];
 #import "RTCView.h"
 #import "RTCStream.h"
 #import "RTCVideoProfile.h"
-#import "RTCVideoCapturer.h"
+#import "RTCExternalCapturer.h"
 
 
 typedef NS_ENUM(NSInteger, RTCEngineErrorCode) {

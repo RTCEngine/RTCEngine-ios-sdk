@@ -50,7 +50,7 @@
 
 -(void)_setAttributes:(NSMutableDictionary *)attributes;
 
--(NSDictionary*)dumps();
+-(NSDictionary*)dumps;
 
 @end
 
