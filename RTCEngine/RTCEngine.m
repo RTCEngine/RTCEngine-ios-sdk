@@ -12,10 +12,8 @@
 #import "AuthToken.h"
 
 @import WebRTC;
-@import SocketIO;
 
-
-//#import <SocketIO/SocketIO-Swift.h>
+#import <SocketIO/SocketIO-Swift.h>
 
 #import "RTCEngine+Internal.h"
 #import "RTCMediaConstraintUtil.h"
@@ -118,7 +116,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     AuthToken* authToken = [AuthToken parseToken:token];
     
-    if (AuthToken == nil) {
+    if (authToken == nil) {
         [self.delegate rtcengine:self didOccurError:RTCEngine_Error_TokenError];
         return;
     }
@@ -337,7 +335,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                    };
             
             [_socket emit:@"join" with:@[data]];
-        }]
+        }];
         
     }];
     
@@ -406,7 +404,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                         NSLog(@"error %@", error);
                                     }
                                 }];
-                            }]
+                            }];
     }];
 }
 
@@ -508,10 +506,10 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             NSDictionary *data = @{
                                    @"stream":[stream dumps],
                                    @"sdp": [sdp sdp]
-                                   }
+                                   };
             [_socket emit:@"addStream" with:@[data]];
-        }]
-    }]
+        }];
+    }];
 }
 
 -(void) removeStreamInternal:(RTCStream *)stream
@@ -525,10 +523,10 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             NSDictionary *data = @{
                                    @"stream":[stream dumps],
                                    @"sdp": [sdp sdp]
-                                   }
+                                   };
             [_socket emit:@"removeStream" with:@[data]];
-        }]
-    }]
+        }];
+    }];
 }
 
 

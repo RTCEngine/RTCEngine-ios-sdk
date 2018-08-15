@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B13509BA4D63F84B52FD7CFD /* libPods-RTCEngine-ios-sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C5CBE553BE3075D353AB75 /* libPods-RTCEngine-ios-sdk.a */; };
-		B2BBF9825C56AC83A1BDC554 /* libPods-RTCEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D276A638710DD4C544ED1FBA /* libPods-RTCEngine.a */; };
+		15B89A78E3095F8B8D969EC7 /* Pods_RTCEngine_ios_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FF028F764B30EB20EEAB2 /* Pods_RTCEngine_ios_sdk.framework */; };
 		F0706EBE21197763007C713E /* AuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EBC21197763007C713E /* AuthToken.h */; };
 		F0706EBF21197763007C713E /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EBD21197763007C713E /* AuthToken.m */; };
 		F0706EC2211978C2007C713E /* StringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EC0211978C2007C713E /* StringUtils.h */; };
@@ -60,6 +59,7 @@
 		F0EBC8B2211478D000BE827F /* RTCEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = F0EBC8B0211478D000BE827F /* RTCEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F0EBC8B5211478D000BE827F /* RTCEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0EBC8AE211478D000BE827F /* RTCEngine.framework */; };
 		F0EBC8B6211478D000BE827F /* RTCEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0EBC8AE211478D000BE827F /* RTCEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F4FB2D1772E4921C0AC7FBDF /* Pods_RTCEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812F2048BC84225C2E9F84D6 /* Pods_RTCEngine.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,12 +87,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00C5CBE553BE3075D353AB75 /* libPods-RTCEngine-ios-sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RTCEngine-ios-sdk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3209D7456FF1A1759E95DB9F /* Pods-RTCEngine-ios-sdk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine-ios-sdk.release.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk.release.xcconfig"; sourceTree = "<group>"; };
 		379B3AE069DC75449D492DBD /* Pods-RTCEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine/Pods-RTCEngine.release.xcconfig"; sourceTree = "<group>"; };
 		4B2480BAB8BC96208C9ED0E8 /* Pods-RTCEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine/Pods-RTCEngine.debug.xcconfig"; sourceTree = "<group>"; };
+		812F2048BC84225C2E9F84D6 /* Pods_RTCEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RTCEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A50FF028F764B30EB20EEAB2 /* Pods_RTCEngine_ios_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RTCEngine_ios_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADEFC6E294897B5192CE98E5 /* Pods-RTCEngine-ios-sdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine-ios-sdk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk.debug.xcconfig"; sourceTree = "<group>"; };
-		D276A638710DD4C544ED1FBA /* libPods-RTCEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RTCEngine.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0706EBC21197763007C713E /* AuthToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthToken.h; sourceTree = "<group>"; };
 		F0706EBD21197763007C713E /* AuthToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthToken.m; sourceTree = "<group>"; };
 		F0706EC0211978C2007C713E /* StringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
@@ -156,7 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0EBC8B5211478D000BE827F /* RTCEngine.framework in Frameworks */,
-				B13509BA4D63F84B52FD7CFD /* libPods-RTCEngine-ios-sdk.a in Frameworks */,
+				15B89A78E3095F8B8D969EC7 /* Pods_RTCEngine_ios_sdk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,7 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2BBF9825C56AC83A1BDC554 /* libPods-RTCEngine.a in Frameworks */,
+				F4FB2D1772E4921C0AC7FBDF /* Pods_RTCEngine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,8 +174,8 @@
 		200A205466EA4B3B658D3A5B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D276A638710DD4C544ED1FBA /* libPods-RTCEngine.a */,
-				00C5CBE553BE3075D353AB75 /* libPods-RTCEngine-ios-sdk.a */,
+				812F2048BC84225C2E9F84D6 /* Pods_RTCEngine.framework */,
+				A50FF028F764B30EB20EEAB2 /* Pods_RTCEngine_ios_sdk.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -372,7 +372,6 @@
 				F0EBC88E2114777500BE827F /* Resources */,
 				F0EBC8BA211478D000BE827F /* Embed Frameworks */,
 				95AEBABECC5A68A501FE65C9 /* [CP] Embed Pods Frameworks */,
-				99C0F4652BDB03B9F87D96F2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -393,7 +392,6 @@
 				F0EBC8AA211478D000BE827F /* Frameworks */,
 				F0EBC8AB211478D000BE827F /* Headers */,
 				F0EBC8AC211478D000BE827F /* Resources */,
-				5BBB57E632A7D49697CB0176 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -479,32 +477,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5BBB57E632A7D49697CB0176 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine/Pods-RTCEngine-resources.sh",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_amatorka.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_miss_etikate.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_1.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_2.png",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_amatorka.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_miss_etikate.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_1.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_2.png",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine/Pods-RTCEngine-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		95AEBABECC5A68A501FE65C9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -512,41 +484,21 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GPUImage/GPUImage.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GPUImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		99C0F4652BDB03B9F87D96F2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk-resources.sh",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_amatorka.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_miss_etikate.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_1.png",
-				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_2.png",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_amatorka.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_miss_etikate.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_1.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_2.png",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D73ABBCB74992B5899748D70 /* [CP] Check Pods Manifest.lock */ = {
@@ -795,6 +747,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RTCEngine/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -823,6 +776,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RTCEngine/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (

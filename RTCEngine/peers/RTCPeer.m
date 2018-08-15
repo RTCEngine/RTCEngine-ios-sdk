@@ -31,7 +31,7 @@
 {
     NSDictionary* stream = [NSDictionary dictionary];
     for (NSDictionary* _stream in _streams) {
-        NSString* _streamId = [_stream objectForKey:@"id"]
+        NSString* _streamId = [_stream objectForKey:@"id"];
         if ([streamId isEqualToString:_streamId]) {
             stream = _stream;
             break;

@@ -47,7 +47,7 @@
     for (NSString* _peerid in _peers) {
         RTCPeer* _peer = [_peers objectForKey:_peerid];
         for (NSDictionary* _stream in _peer.streams) {
-            NSString* _streamId = [_stream objectForKey:@"id"]
+            NSString* _streamId = [_stream objectForKey:@"id"];
             if ([streamId isEqualToString:_streamId]) {
                 peer = _peer;
                 break;

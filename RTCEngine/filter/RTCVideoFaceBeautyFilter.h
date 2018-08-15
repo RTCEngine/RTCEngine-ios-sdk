@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <GPUImage.h>
+@import GPUImage;
 
 @interface RTCVideoFaceBeautyFilter : GPUImageFilter
 

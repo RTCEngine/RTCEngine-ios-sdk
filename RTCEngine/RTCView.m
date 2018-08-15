@@ -146,12 +146,7 @@
     if(subview==nil){
         return;
     }
-    if (frame.nativeHandle) {
-        RTCVideoFrame* i420frame = [frame newI420VideoFrame];
-        [subview renderFrame:i420frame];
-    } else {
-        [subview renderFrame:frame];
-    }
+    [subview renderFrame:frame];
 }
 
 

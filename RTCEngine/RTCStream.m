@@ -44,9 +44,6 @@
 }
 
 
-@property (nonatomic,strong) RTCVideoTrack*  videoTrack;
-@property (nonatomic,strong) RTCAudioTrack*  audioTrack;
-
 @end
 
 @implementation RTCStream
@@ -88,7 +85,7 @@
 }
 
 
--(DotView*)view
+-(RTCView*)view
 {
     return _view;
 }
@@ -328,7 +325,7 @@
         }
         
         // todo
-        if (frame.buffer isKindOfClass:[RTCCVPixelBuffer class]) {
+        if ([frame.buffer isKindOfClass:[RTCCVPixelBuffer class]]) {
             
         }
        
