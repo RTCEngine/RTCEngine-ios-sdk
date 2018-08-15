@@ -47,10 +47,11 @@
 
 -(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;
 
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video  delegate:(nullable id<RTCStreamDelegate>)delegate;
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary*)attributes;
 
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video videoProfile:(RTCEngineVideoProfile)profile delegate:(nullable id<RTCStreamDelegate> )delegate;
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary*)attributes delegate:(nullable id<RTCStreamDelegate>)delegate;
 
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary*)attributes videoProfile:(RTCEngineVideoProfile)profile delegate:(nullable id<RTCStreamDelegate> )delegate;
 
 -(void)setupVideoProfile:(RTCEngineVideoProfile)profile;
 

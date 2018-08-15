@@ -48,30 +48,51 @@
 
 @implementation RTCStream
 
--(instancetype) initWithAudio:(BOOL)audio video:(BOOL)video
-{
-    self = [self initWithAudio:audio video:video delegate:NULL];
-    return self;
-}
 
--(instancetype)initWithAudio:(BOOL)audio video:(BOOL)video delegate:(id<RTCStreamDelegate>)delegate
+-(instancetype)init
 {
-    
     self = [super init];
+    
     _local = true;
-    _video = video;
-    _audio = audio;
     _streamId = [[NSUUID UUID] UUIDString];
     operationQueue = [[NSOperationQueue alloc] init];
     [operationQueue setMaxConcurrentOperationCount:1];
     usingFrontCamera = YES;
-    
     [self setupVideoProfile:RTCEngine_VideoProfile_240P];
-    _delegate = delegate;
     _view = [[RTCView alloc] initWithFrame:CGRectZero];
     return self;
 }
 
+-(instancetype) initWithAudio:(BOOL)audio video:(BOOL)video
+{
+    self = [self init];
+    _audio = audio;
+    _video = video;
+    return self;
+}
+
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary*)attributes
+{
+    
+    self = [self initWithAudio:audio video:video];
+    _attributes = attributes;
+    return self;
+}
+
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary *)attributes delegate:(id<RTCStreamDelegate>)delegate
+{
+    
+    self = [self initWithAudio:audio video:video attributes:attributes];
+    _delegate = delegate;
+    return self;
+}
+
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary *)attributes videoProfile:(RTCEngineVideoProfile)profile delegate:(id<RTCStreamDelegate>)delegate
+{
+    self = [self initWithAudio:audio video:video attributes:attributes delegate:delegate];
+    [self setupVideoProfile:profile];
+    return self;
+}
 
 -(NSString*)streamId
 {
@@ -115,7 +136,7 @@
 
 -(void)setupVideoProfile:(RTCEngineVideoProfile)profile
 {
-    
+    _videoProfile = profile;
     NSDictionary *info = [RTCVideoProfile infoForProfile:profile];
     minWidth = [[info objectForKey:@"minWidth"] integerValue];
     minHeight = [[info objectForKey:@"minHeight"] integerValue];
@@ -244,7 +265,6 @@
     usingFrontCamera ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
     AVCaptureDevice *device = [self findDeviceForPosition:position];
     AVCaptureDeviceFormat *format = [self selectFormatForDevice:device];
-    
     [cameraCapturer startCaptureWithDevice:device format:format fps:frameRate];
 }
 
@@ -255,13 +275,11 @@
 
 -(void)switchCamera
 {
-    
     usingFrontCamera = !usingFrontCamera;
     if ([cameraCapturer isKindOfClass:[RTCCameraVideoCapturer class]]) {
         [self startCapture];
     }
 }
-
 
 
 - (void)setMaxBitrate:(NSUInteger)maxBitrate forVideoSender:(RTCRtpSender *)sender {
@@ -276,6 +294,16 @@
     [sender setParameters:parametersToModify];
 }
 
+-(NSDictionary*)dumps
+{
+    return @{
+             @"id":_peerId,
+             @"msid":_streamId,
+             @"local":_local,
+             @"bitrate":maxVideoBitrate,
+             @"attributes":_attributes
+             }
+}
 
 #pragma delegate
 
