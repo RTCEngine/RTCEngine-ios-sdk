@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,16 +13,101 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehQ-G1-JQf">
+                                <rect key="frame" x="162" y="728" width="50" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="UbH-Y2-dzU"/>
+                                    <constraint firstAttribute="width" constant="50" id="fgF-JP-MwC"/>
+                                </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Join">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="joinClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aqH-80-0pI"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="epI-T4-e6b">
+                                <rect key="frame" x="16" y="737" width="42" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="jto-bZ-in8"/>
+                                    <constraint firstAttribute="width" constant="42" id="ukp-hs-aGe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLf-8E-aRA">
+                                <rect key="frame" x="16" y="657" width="91" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="91" id="Ewl-sm-GZb"/>
+                                    <constraint firstAttribute="height" constant="30" id="TRy-FQ-CtV"/>
+                                </constraints>
+                                <state key="normal" title="audio mute">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="audioToggle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tHJ-nu-NIA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwZ-Pq-8FH">
+                                <rect key="frame" x="142.66666666666666" y="657" width="90" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="1Tl-ky-sId"/>
+                                    <constraint firstAttribute="height" constant="30" id="raJ-9k-fRl"/>
+                                </constraints>
+                                <state key="normal" title="video mute"/>
+                                <connections>
+                                    <action selector="videoToggle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ebZ-o5-mWX"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8BZ-g3-IgF">
+                                <rect key="frame" x="269" y="657" width="90" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="KF0-RZ-gLq"/>
+                                    <constraint firstAttribute="height" constant="30" id="xh0-iW-ABD"/>
+                                </constraints>
+                                <state key="normal" title="switch"/>
+                                <connections>
+                                    <action selector="cameraSwitch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lfh-bD-vm8"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="lwZ-Pq-8FH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6k0-xJ-kpJ"/>
+                            <constraint firstItem="oLf-8E-aRA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="81a-7h-aY8"/>
+                            <constraint firstItem="ehQ-G1-JQf" firstAttribute="top" secondItem="lwZ-Pq-8FH" secondAttribute="bottom" constant="41" id="AHF-Iz-BvM"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8BZ-g3-IgF" secondAttribute="trailing" constant="16" id="CSj-GS-dFP"/>
+                            <constraint firstItem="ehQ-G1-JQf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FsI-iA-ldZ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="epI-T4-e6b" secondAttribute="bottom" constant="20" id="KGf-Sa-QYi"/>
+                            <constraint firstItem="epI-T4-e6b" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="UhD-lf-skm"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ehQ-G1-JQf" secondAttribute="bottom" constant="20" id="bzC-Xi-Pry"/>
+                            <constraint firstItem="epI-T4-e6b" firstAttribute="top" secondItem="oLf-8E-aRA" secondAttribute="bottom" constant="50" id="g5b-Ib-9Go"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8BZ-g3-IgF" secondAttribute="bottom" constant="91" id="ncb-2F-nsX"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="audioMuteButton" destination="oLf-8E-aRA" id="t68-8L-gyi"/>
+                        <outlet property="joinButton" destination="ehQ-G1-JQf" id="Qmp-JB-2Gd"/>
+                        <outlet property="switchCamButton" destination="8BZ-g3-IgF" id="gc4-nG-5zt"/>
+                        <outlet property="userLabel" destination="epI-T4-e6b" id="9Em-dY-Jjg"/>
+                        <outlet property="videoMuteButton" destination="lwZ-Pq-8FH" id="NiV-ji-lPE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="35.467980295566505"/>
         </scene>
     </scenes>
 </document>

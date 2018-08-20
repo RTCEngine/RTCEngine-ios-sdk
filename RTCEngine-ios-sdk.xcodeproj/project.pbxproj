@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		15B89A78E3095F8B8D969EC7 /* Pods_RTCEngine_ios_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FF028F764B30EB20EEAB2 /* Pods_RTCEngine_ios_sdk.framework */; };
+		F01ED9AC212AA760005D1C64 /* CVPixelBufferResize.m in Sources */ = {isa = PBXBuildFile; fileRef = F01ED9AB212AA760005D1C64 /* CVPixelBufferResize.m */; };
 		F0706EBE21197763007C713E /* AuthToken.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EBC21197763007C713E /* AuthToken.h */; };
 		F0706EBF21197763007C713E /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F0706EBD21197763007C713E /* AuthToken.m */; };
 		F0706EC2211978C2007C713E /* StringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F0706EC0211978C2007C713E /* StringUtils.h */; };
@@ -93,6 +94,8 @@
 		812F2048BC84225C2E9F84D6 /* Pods_RTCEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RTCEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A50FF028F764B30EB20EEAB2 /* Pods_RTCEngine_ios_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RTCEngine_ios_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADEFC6E294897B5192CE98E5 /* Pods-RTCEngine-ios-sdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RTCEngine-ios-sdk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RTCEngine-ios-sdk/Pods-RTCEngine-ios-sdk.debug.xcconfig"; sourceTree = "<group>"; };
+		F01ED9AA212AA760005D1C64 /* CVPixelBufferResize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVPixelBufferResize.h; sourceTree = "<group>"; };
+		F01ED9AB212AA760005D1C64 /* CVPixelBufferResize.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CVPixelBufferResize.m; sourceTree = "<group>"; };
 		F0706EBC21197763007C713E /* AuthToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthToken.h; sourceTree = "<group>"; };
 		F0706EBD21197763007C713E /* AuthToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthToken.m; sourceTree = "<group>"; };
 		F0706EC0211978C2007C713E /* StringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
@@ -294,6 +297,8 @@
 				F0EBC89E2114777600BE827F /* LaunchScreen.storyboard */,
 				F0EBC8A12114777600BE827F /* Info.plist */,
 				F0EBC8A22114777600BE827F /* main.m */,
+				F01ED9AA212AA760005D1C64 /* CVPixelBufferResize.h */,
+				F01ED9AB212AA760005D1C64 /* CVPixelBufferResize.m */,
 			);
 			path = "RTCEngine-ios-sdk";
 			sourceTree = "<group>";
@@ -529,6 +534,7 @@
 				F0EBC8982114777500BE827F /* ViewController.m in Sources */,
 				F0EBC8A32114777600BE827F /* main.m in Sources */,
 				F0EBC8952114777500BE827F /* AppDelegate.m in Sources */,
+				F01ED9AC212AA760005D1C64 /* CVPixelBufferResize.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,6 +712,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CLKRLU8RPY;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RTCEngine-ios-sdk/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -724,6 +731,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CLKRLU8RPY;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RTCEngine-ios-sdk/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
