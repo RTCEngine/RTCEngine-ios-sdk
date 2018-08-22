@@ -15,6 +15,7 @@
     
 }
 
+@property (nonatomic, strong) SocketManager* manager;
 @property (nonatomic, strong) SocketIOClient *socket;
 @property (nonatomic, strong) RTCPeerConnectionFactory *connectionFactory;
 

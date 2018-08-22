@@ -21,7 +21,7 @@
 
 static NSString*  APP_SECRET = @"test_secret";
 
-static NSString* TOKEN_URL = @"http://localhost:3888/api/generateToken";
+static NSString* TOKEN_URL = @"http://192.168.201.10:3888/api/generateToken";
 
 static NSString* ROOM = @"test";
 
@@ -216,48 +216,67 @@ static NSString* ROOM = @"test";
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine didJoined:(NSString *) peerId
 {
-    
+    NSLog(@"joined %@", peerId);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine didLeave:(NSString *) peerId
 {
-    
+    NSLog(@"leave %@", peerId);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didStateChange:(RTCEngineStatus) state
 {
-    
+    NSLog(@"stateChange %ld", state);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didAddLocalStream:(RTCStream *) stream
 {
-    
+    NSLog(@"addLocalStream %@", stream.streamId);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didRemoveLocalStream:(RTCStream *) stream
 {
-    
+    NSLog(@"RemoveLocalStream %@", stream.streamId);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didAddRemoteStream:(RTCStream *) stream
 {
+    [stream setDelegate:self];
     
+    UIView* view = stream.view;
+    
+    [self.view addSubview:view];
+    
+    [self.remoteVideoViews setObject:view forKey:stream.streamId];
+    
+    [self.view setNeedsLayout];
+    
+    NSLog(@"attributes %@", stream.attributes);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didRemoveRemoteStream:(RTCStream *) stream
 {
     
+    if ([_remoteVideoViews objectForKey:stream.streamId]) {
+        
+        UIView* view = stream.view;
+        
+        [view removeFromSuperview];
+        
+        [_remoteVideoViews removeObjectForKey:stream.streamId];
+        
+        [self.view setNeedsLayout];
+    }
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didOccurError:(RTCEngineErrorCode) code
 {
-    
+    NSLog(@"occurError %ld", code);
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didReceiveMessage:(NSDictionary*) message
 {
-    
-    
+    NSLog(@"receiveMessage %@", message);
 }
 
 
@@ -266,14 +285,12 @@ static NSString* ROOM = @"test";
 
 -(void)stream:(RTCStream* _Nullable)stream  didMutedVideo:(BOOL)muted
 {
-    
-    
+    NSLog(@"didMuteVideo");
 }
 
 -(void)stream:(RTCStream* _Nullable)stream  didMutedAudio:(BOOL)muted
 {
-    
-    
+    NSLog(@"didMutedAudio");
 }
 
 

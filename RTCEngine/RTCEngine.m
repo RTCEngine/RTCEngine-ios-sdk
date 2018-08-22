@@ -230,14 +230,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     
     NSURL* url = [[NSURL alloc] initWithString:_authToken.wsURL];
-    SocketManager* manager = [[SocketManager alloc] initWithSocketURL:url
+    _manager = [[SocketManager alloc] initWithSocketURL:url
                                                                config:@{@"log": @YES,
                                                                         @"compress": @YES,
                                                                         @"forceWebsockets":@YES,
                                                                         @"reconnectAttempts":@5,
                                                                         @"reconnectWait":@10000}];
     
-    _socket = manager.defaultSocket;
+    _socket = _manager.defaultSocket;
     __weak id weakSelf = self;
     [_socket on:@"connect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         [weakSelf join];
@@ -297,6 +297,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             [_delegate rtcengine:self didReceiveMessage:_data];
         });
     }];
+    
+    [_socket connect];
 }
 
 
@@ -584,7 +586,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didChangeSignalingState:(RTCSignalingState)stateChanged
 {
-     NSLog(@"didChangeSignalingState %@", stateChanged);
+     NSLog(@"didChangeSignalingState %ld", stateChanged);
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
