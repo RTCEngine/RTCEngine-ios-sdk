@@ -19,9 +19,9 @@
 
 #import "CVPixelBufferResize.h"
 
-static NSString*  APP_SECRET = @"dotEngine_secret";
+static NSString*  APP_SECRET = @"test_secret";
 
-static NSString* TOKEN_URL = @"https://dotengine2.dot.cc/api/generateToken";
+static NSString* TOKEN_URL = @"http://localhost:3888/api/generateToken";
 
 static NSString* ROOM = @"test";
 
@@ -59,6 +59,8 @@ static NSString* ROOM = @"test";
 
 @property (nonatomic,strong) NSMutableArray  *publishers;
 
+@property (nonatomic,strong) NSMutableDictionary *remoteVideoViews;
+
 @end
 
 @implementation ViewController
@@ -85,15 +87,15 @@ static NSString* ROOM = @"test";
     
     [_localStream setupLocalMedia];
     
-    _localStream.view.frame = CGRectMake(10, 10, self.view.bounds.size.width/2, self.view.bounds.size.width/2);
+    _localStream.view.frame = CGRectMake(0, 0, self.view.bounds.size.width/2, self.view.bounds.size.width/2);
     
     [self.view addSubview:_localStream.view];
     
     [self hideMenuButtons];
     
+     _remoteVideoViews = [NSMutableDictionary dictionary];
+    
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-    
-    
 }
 
 
@@ -128,10 +130,11 @@ static NSString* ROOM = @"test";
 - (IBAction)joinClick:(id)sender {
     
     if (!connected) {
-        
         [sender setTitle:@"joining" forState:UIControlStateNormal];
+        [self joinRoom];
     } else {
         
+        [self leaveRoom];
     }
     
     self.joinButton.enabled = false;
@@ -149,9 +152,22 @@ static NSString* ROOM = @"test";
 
 - (IBAction)cameraSwitch:(id)sender {
     
+    if (_localStream) {
+        [_localStream switchCamera];
+    }
 }
 
 
+-(void)leaveRoom
+{
+    
+    [_rtcEngine leaveRoom];
+    [_remoteVideoViews removeAllObjects];
+    
+    [_joinButton setTitle:@"leave" forState:UIControlStateNormal];
+    
+    _joinButton.enabled = NO;
+}
 
 -(void)joinRoom
 {
