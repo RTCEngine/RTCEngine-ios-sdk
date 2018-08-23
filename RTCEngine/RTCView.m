@@ -143,6 +143,8 @@
 {
     // todo it is hack,  need to remove this
     
+    
+    
     if(subview==nil){
         return;
     }

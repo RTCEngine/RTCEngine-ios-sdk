@@ -191,6 +191,43 @@ static NSString* ROOM = @"test";
 }
 
 
+-(void)viewWillLayoutSubviews
+{
+    
+    [super viewWillLayoutSubviews];
+    
+    [self layoutVideoViews];
+}
+
+
+-(void)layoutVideoViews
+{
+    
+    NSMutableArray *videoViews = [NSMutableArray array];
+    
+    if (self.localStream) {
+        
+        [videoViews addObject:self.localStream.view];
+    }
+    
+    [videoViews addObjectsFromArray:[self.remoteVideoViews allValues]];
+    
+    if (videoViews.count == 1) {
+        
+        ((RTCView*)videoViews[0]).frame = CGRectMake(0, 0, self.view.bounds.size.width/2, self.view.bounds.size.width/2);
+        return;
+    }
+    
+    for (int i=0; i < [videoViews count]; i++) {
+        
+        CGRect frame = [self frameAtPosition:i];
+        
+        ((UIView*)videoViews[i]).frame = frame;
+    }
+}
+
+
+
 -(CGRect)frameAtPosition:(int)postion
 {
     
@@ -227,6 +264,10 @@ static NSString* ROOM = @"test";
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didStateChange:(RTCEngineStatus) state
 {
     NSLog(@"stateChange %ld", state);
+    
+    if (state == RTCEngineStatusConnected) {
+        [self.joinButton setTitle:@"leave" forState:UIControlStateNormal];
+    }
 }
 
 -(void) rtcengine:(RTCEngine* _Nonnull) engine  didAddLocalStream:(RTCStream *) stream

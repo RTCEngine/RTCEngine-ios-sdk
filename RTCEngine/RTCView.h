@@ -23,9 +23,6 @@ typedef NS_ENUM(NSUInteger, RTCVideoViewScaleMode)
 };
 
 
-
-// TODO move to METAL
-
 @protocol RTCViewDelegate <NSObject>
 
 - (void)videoViewDidReceiveData:(RTCView *)renderer withSize:(CGSize)dimensions;

@@ -310,7 +310,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
     config.iceTransportPolicy = RTCIceTransportPolicyAll;
-    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.sdpSemantics = RTCSdpSemanticsPlanB;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
     RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
@@ -325,6 +325,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         if (error) {
             return;
         }
+        
+        NSLog(@"offer %@", sdp.sdp);
         
         [peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
             NSDictionary *data = @{
@@ -364,11 +366,13 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     [_peerconnection setRemoteDescription:answer completionHandler:^(NSError * _Nullable error) {
         if (error) {
+            NSLog(@"setRemoteDescription: %@", error.description);
             return;
         }
     }];
     
     [self setStatus:RTCEngineStatusConnected];
+    
     
 }
 
@@ -601,31 +605,35 @@ didChangeSignalingState:(RTCSignalingState)stateChanged
         return;
     }
     
-    BOOL audio = stream.audioTracks.count > 0;
-    BOOL video = stream.videoTracks.count > 0;
-    
-    RTCStream* rtcStream = [[RTCStream alloc] init];
-    rtcStream.audio = audio;
-    rtcStream.video = video;
-    rtcStream.stream = stream;
-    rtcStream.streamId = stream.streamId;
-    rtcStream.local = false;
-    rtcStream.peerId = peer.peerid;
-    rtcStream.engine = self;
 
-    [_remoteStreams setObject:rtcStream forKey:rtcStream.streamId];
-
-    // todo  map attributes
-    
-    for (NSDictionary* streamData in peer.streams){
-        if([streamData[@"id"] isEqualToString:rtcStream.streamId]) {
-            NSDictionary* attributes =streamData[@"attributes"];
-            rtcStream.attributes = attributes;
-        }
-    }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-          [_delegate rtcengine:self didAddRemoteStream:rtcStream];
+        
+        BOOL audio = stream.audioTracks.count > 0;
+        BOOL video = stream.videoTracks.count > 0;
+        
+        RTCStream* rtcStream = [[RTCStream alloc] init];
+        rtcStream.audio = audio;
+        rtcStream.video = video;
+        rtcStream.stream = stream;
+        rtcStream.streamId = stream.streamId;
+        rtcStream.local = false;
+        rtcStream.peerId = peer.peerid;
+        rtcStream.engine = self;
+        
+        [rtcStream.view setStream:rtcStream];
+        
+        
+        [_remoteStreams setObject:rtcStream forKey:rtcStream.streamId];
+        
+        for (NSDictionary* streamData in peer.streams){
+            if([streamData[@"id"] isEqualToString:rtcStream.streamId]) {
+                NSDictionary* attributes =streamData[@"attributes"];
+                rtcStream.attributes = attributes;
+            }
+        }
+       
+        [_delegate rtcengine:self didAddRemoteStream:rtcStream];
     });
     
 }
@@ -689,7 +697,7 @@ didChangeIceConnectionState:(RTCIceConnectionState)newState
 didChangeIceGatheringState:(RTCIceGatheringState)newState
 {
     // do nothing
-    NSLog(@"didChangeIceGatheringState %@", newState);
+    NSLog(@"didChangeIceGatheringState %ld", newState);
 }
 
 
