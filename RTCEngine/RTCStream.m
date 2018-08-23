@@ -53,7 +53,23 @@
 {
     self = [super init];
     
+
+    return self;
+}
+
+-(instancetype) initWithAudio:(BOOL)audio video:(BOOL)video
+{
+    self = [self initWithAudio:audio video:video delegate:NULL];
+    return self;
+}
+
+-(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video  delegate:(id<RTCStreamDelegate>)delegate
+{
+    self = [super init];
     _local = true;
+    _video = video;
+    _audio = audio;
+    _attributes = [NSDictionary dictionary];
     _streamId = [[NSUUID UUID] UUIDString];
     operationQueue = [[NSOperationQueue alloc] init];
     [operationQueue setMaxConcurrentOperationCount:1];
@@ -63,36 +79,6 @@
     return self;
 }
 
--(instancetype) initWithAudio:(BOOL)audio video:(BOOL)video
-{
-    self = [self init];
-    _audio = audio;
-    _video = video;
-    return self;
-}
-
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary*)attributes
-{
-    
-    self = [self initWithAudio:audio video:video];
-    _attributes = attributes;
-    return self;
-}
-
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary *)attributes delegate:(id<RTCStreamDelegate>)delegate
-{
-    
-    self = [self initWithAudio:audio video:video attributes:attributes];
-    _delegate = delegate;
-    return self;
-}
-
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video attributes:(NSDictionary *)attributes videoProfile:(RTCEngineVideoProfile)profile delegate:(id<RTCStreamDelegate>)delegate
-{
-    self = [self initWithAudio:audio video:video attributes:attributes delegate:delegate];
-    [self setupVideoProfile:profile];
-    return self;
-}
 
 -(NSString*)streamId
 {
@@ -133,6 +119,13 @@
     _brightLevel = brightLevel;
 }
 
+-(void)setAttributes:(NSDictionary *)attributes
+{
+    if (attributes == nil) {
+        return;
+    }
+    _attributes = attributes;
+}
 
 -(void)setupVideoProfile:(RTCEngineVideoProfile)profile
 {
@@ -282,6 +275,16 @@
 }
 
 
+-(void)snapshot:(void (^)(UIImage * _Nullable))snapshotBlock
+{
+    // todo
+}
+
+-(void)setMaxBitrate
+{
+    // todo
+}
+
 - (void)setMaxBitrate:(NSUInteger)maxBitrate forVideoSender:(RTCRtpSender *)sender {
     if (maxBitrate <= 0) {
         return;
@@ -293,6 +296,29 @@
     }
     [sender setParameters:parametersToModify];
 }
+
+
+
+-(void)onMuteAudio:(BOOL)muted
+{
+    if (_delegate) {
+        if ([_delegate respondsToSelector:@selector(stream:didMutedAudio:)]) {
+            [_delegate stream:self didMutedAudio:muted];
+        }
+    }
+}
+
+
+-(void)onMuteVideo:(BOOL)muted
+{
+    if (_delegate) {
+        if ([_delegate respondsToSelector:@selector(stream:didMutedVideo:)]) {
+            [_delegate stream:self didMutedVideo:muted];
+        }
+    }
+}
+
+
 
 -(NSDictionary*)dumps
 {

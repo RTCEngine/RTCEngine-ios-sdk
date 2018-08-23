@@ -596,44 +596,39 @@ didChangeSignalingState:(RTCSignalingState)stateChanged
 - (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
 {
     
-    
-    // add remote stream
-    
     RTCPeer* peer = [peerManager peerForStream:stream.streamId];
     if(!peer) {
         NSLog(@"can not find stream %@", stream.streamId);
         return;
     }
     
-
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        BOOL audio = stream.audioTracks.count > 0;
-        BOOL video = stream.videoTracks.count > 0;
-        
-        RTCStream* rtcStream = [[RTCStream alloc] init];
-        rtcStream.audio = audio;
-        rtcStream.video = video;
-        rtcStream.stream = stream;
-        rtcStream.streamId = stream.streamId;
-        rtcStream.local = false;
-        rtcStream.peerId = peer.peerid;
-        rtcStream.engine = self;
-        
-        [rtcStream.view setStream:rtcStream];
-        
-        
-        [_remoteStreams setObject:rtcStream forKey:rtcStream.streamId];
-        
-        for (NSDictionary* streamData in peer.streams){
-            if([streamData[@"id"] isEqualToString:rtcStream.streamId]) {
-                NSDictionary* attributes =streamData[@"attributes"];
-                rtcStream.attributes = attributes;
-            }
+    BOOL audio = stream.audioTracks.count > 0;
+    BOOL video = stream.videoTracks.count > 0;
+    
+    RTCStream* rtcStream = [[RTCStream alloc] init];
+    rtcStream.audio = audio;
+    rtcStream.video = video;
+    rtcStream.stream = stream;
+    rtcStream.streamId = stream.streamId;
+    rtcStream.local = false;
+    rtcStream.peerId = peer.peerid;
+    rtcStream.engine = self;
+    
+    [_remoteStreams setObject:rtcStream forKey:rtcStream.streamId];
+    
+    for (NSDictionary* streamData in peer.streams){
+        if([streamData[@"id"] isEqualToString:rtcStream.streamId]) {
+            NSDictionary* attributes =streamData[@"attributes"];
+            rtcStream.attributes = attributes;
         }
-       
-        [_delegate rtcengine:self didAddRemoteStream:rtcStream];
+    }
+    
+    // init view here
+    dispatch_async(dispatch_get_main_queue(), ^{
+        RTCView* view = [[RTCView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        [view setStream:rtcStream];
+        rtcStream.view = view;
+        [self->_delegate rtcengine:self didAddRemoteStream:rtcStream];
     });
     
 }
