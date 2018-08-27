@@ -34,7 +34,7 @@
 @property (nonatomic,assign,readwrite) BOOL video;
 @property (nonatomic,assign,readwrite) BOOL audio;
 @property (nonatomic,retain,readwrite) RTCView* view;
-@property (nonatomic,readwrite) NSDictionary* attributes;
+
 
 @property (nonatomic,weak) RTCPeerConnection* peerconnection;
 @property (nonatomic,weak) RTCEngine* engine;

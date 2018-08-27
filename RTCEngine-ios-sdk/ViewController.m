@@ -21,7 +21,7 @@
 
 static NSString*  APP_SECRET = @"test_secret";
 
-static NSString* TOKEN_URL = @"http://192.168.201.10:3888/api/generateToken";
+static NSString* TOKEN_URL = @"http://192.168.203.213:3888/api/generateToken";
 
 static NSString* ROOM = @"test";
 
@@ -71,7 +71,7 @@ static NSString* ROOM = @"test";
     
     self.rtcEngine = [RTCEngine sharedInstanceWithDelegate:self];
     
-    _localStream = [[RTCStream alloc] initWithAudio:TRUE video:TRUE attributes:@{} delegate:self];
+    _localStream = [[RTCStream alloc] initWithAudio:TRUE video:TRUE delegate:self];
     
     resize = [[CVPixelBufferResize alloc] init];
     
