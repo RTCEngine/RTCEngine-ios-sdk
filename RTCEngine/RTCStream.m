@@ -19,7 +19,6 @@
 
 @interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate>
 {
-    NSString*  sessionPreset;
     NSInteger minWidth;
     NSInteger minHeight;
     NSInteger maxWidth;
@@ -166,6 +165,8 @@
         _videoTrack = [factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
         [_stream addVideoTrack:_videoTrack];
         [self startCapture];
+        
+        NSLog(@"video track %@", _videoTrack.trackId);
     }
     
     if (_audio) {
@@ -173,6 +174,8 @@
         _audioTrack = [factory audioTrackWithSource:audioSource trackId:[[NSUUID UUID] UUIDString]];
         
         [_stream addAudioTrack:_audioTrack];
+        
+        NSLog(@"audio track %@", _audioTrack.trackId);
     }
     
     if (_view != nil) {
@@ -290,11 +293,11 @@
         return;
     }
     
-    RTCRtpParameters *parametersToModify = sender.parameters;
-    for (RTCRtpEncodingParameters *encoding in parametersToModify.encodings) {
-        encoding.maxBitrateBps = @(maxBitrate);
-    }
-    [sender setParameters:parametersToModify];
+//    RTCRtpParameters *parametersToModify = sender.parameters;
+//    for (RTCRtpEncodingParameters *encoding in parametersToModify.encodings) {
+//        encoding.maxBitrateBps = @(maxBitrate);
+//    }
+//    [sender setParameters:parametersToModify];
 }
 
 
@@ -385,7 +388,8 @@
        
     } else {
         if(cameraCapturer != nil && videoSource != nil) {
-              [videoSource capturer:cameraCapturer didCaptureVideoFrame:frame];
+            [videoSource capturer:cameraCapturer didCaptureVideoFrame:frame];
+            NSLog(@"got capture video frame  %ldx%ld", frame.width, frame.height);
         }
     }
 }

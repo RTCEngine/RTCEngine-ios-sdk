@@ -27,7 +27,7 @@
 static RTCEngine *sharedRTCEngineInstance = nil;
 
 
-@interface RTCEngine () <RTCPeerConnectionDelegate>
+@interface RTCEngine () <RTCPeerConnectionDelegate,RTCVideoCapturerDelegate>
 {
     NSString    *roomId;
     NSString    *localUserId;
@@ -75,6 +75,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         peerManager = [[RTCPeerManager alloc] init];
         
         _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
+        //_connectionFactory = [[RTCPeerConnectionFactory alloc] init];
         _iceConnected = false;
         _closed = false;
     }
@@ -152,11 +153,15 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         if (stream.stream != nil) {
             if (stream.videoTrack) {
-                [_peerconnection addTrack:stream.videoTrack streamIds:@[stream.streamId]];
+                RTCRtpSender* videoSender = [_peerconnection addTrack:stream.videoTrack streamIds:@[stream.streamId]];
+                NSLog(@"videosender %@", videoSender);
             }
             if (stream.audioTrack) {
-                [_peerconnection addTrack:stream.audioTrack streamIds:@[stream.streamId]];
+                RTCRtpSender* audioSender = [_peerconnection addTrack:stream.audioTrack streamIds:@[stream.streamId]];
+                NSLog(@"audiosender %@", audioSender);
             }
+            
+            //[_peerconnection addStream:stream.stream];
         }
         
         stream.peerId = _authToken.userid;
@@ -304,12 +309,12 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 -(void) join
 {
-    BOOL planb = TRUE;
+    BOOL planb = FALSE;
     RTCConfiguration *config = [[RTCConfiguration alloc] init];
     config.iceServers = @[];
-    config.bundlePolicy = RTCBundlePolicyMaxBundle;
-    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-    config.iceTransportPolicy = RTCIceTransportPolicyAll;
+//    config.bundlePolicy = RTCBundlePolicyMaxBundle;
+//    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
+//    config.iceTransportPolicy = RTCIceTransportPolicyAll;
     config.sdpSemantics = RTCSdpSemanticsPlanB;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
@@ -429,6 +434,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                                                      @"sdp":sdp,
                                                                      @"type":@"answer"}];
     
+    
+    NSLog(@"answer %@\n", answer.sdp);
+    
     [_peerconnection setRemoteDescription:answer completionHandler:^(NSError * _Nullable error) {
         if (error) {
             NSLog(@"error %@", error);
@@ -508,12 +516,15 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         if (error) {
             return;
         }
-        [_peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+        [self->_peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+            
+            NSLog(@"offer %@\n", sdp.sdp);
+            
             NSDictionary *data = @{
                                    @"stream":[stream dumps],
                                    @"sdp": [sdp sdp]
                                    };
-            [_socket emit:@"addStream" with:@[data]];
+            [self->_socket emit:@"addStream" with:@[data]];
         }];
     }];
 }

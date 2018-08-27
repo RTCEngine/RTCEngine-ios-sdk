@@ -23,7 +23,7 @@ static NSString*  APP_SECRET = @"test_secret";
 
 static NSString* TOKEN_URL = @"http://192.168.203.213:3888/api/generateToken";
 
-static NSString* ROOM = @"test";
+static NSString* ROOM = @"tes_troom";
 
 
 @interface ViewController () <RTCEngineDelegate, RTCStreamDelegate>
@@ -267,6 +267,9 @@ static NSString* ROOM = @"test";
     
     if (state == RTCEngineStatusConnected) {
         [self.joinButton setTitle:@"leave" forState:UIControlStateNormal];
+        // here, we add Stream
+        
+        [self.rtcEngine addStream:self.localStream];
     }
 }
 
