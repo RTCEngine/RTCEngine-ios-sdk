@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <WebRTC/RTCIceServer.h>
 #import "StringUtils.h"
 
 static NSString* _Nonnull kAuthTokenRoomKey = @"room";
@@ -24,7 +25,7 @@ static NSString* _Nonnull kAuthTokenWsUrlKey = @"wsUrl";
 @property(nonnull, strong) NSString*  userid;
 @property(nonnull, strong) NSString*  room;
 @property(nonnull, strong) NSString*  token;
-
+@property(nonnull, strong) NSArray<RTCIceServer *>* iceServers;
 
 +(instancetype _Nullable)parseToken:(NSString* _Nonnull)token;
 

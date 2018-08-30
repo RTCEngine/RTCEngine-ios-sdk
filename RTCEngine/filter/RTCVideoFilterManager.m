@@ -8,13 +8,14 @@
 
 #import "RTCVideoFilterManager.h"
 
-
 @interface RTCVideoFilterManager()
 {
     CGSize videoSize;
     RTCCVPixelBufferInput* input;
     RTCVideoFaceBeautyFilter* filter;
     GPUImageRawDataOutput* output;
+    
+    RTCVideoRotation  currentRotation;
 }
 
 @end
@@ -31,6 +32,8 @@
     _delegate = delegate;
     [input addTarget:filter];
     [filter addTarget:output];
+    
+    currentRotation = RTCVideoRotation_0;
     
     __unsafe_unretained GPUImageRawDataOutput * weakOutput = output;
     
@@ -69,18 +72,21 @@
     // todo
 }
 
--(BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer
+-(BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(RTCVideoRotation)rotation
 {
     
+    if (currentRotation != rotation) {
+        currentRotation = rotation;
+    }
     OSType pixelFormatType = CVPixelBufferGetPixelFormatType(pixelBuffer);
     BOOL ret;
     if (pixelFormatType == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) {
         CVPixelBufferRef copypixelBuffer = [RTCCVPixelBufferConverter NV12TOARGB:pixelBuffer];
-        ret = [input processCVPixelBuffer:copypixelBuffer];
+        ret = [input processCVPixelBuffer:copypixelBuffer rotation:currentRotation];
         return ret;
     }
     
-    ret = [input processCVPixelBuffer:pixelBuffer];
+    ret = [input processCVPixelBuffer:pixelBuffer rotation:currentRotation];
     return ret;
 }
 

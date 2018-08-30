@@ -10,4 +10,11 @@
 
 @implementation RTCExternalCapturer
 
+-(void)sendCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(VideoRotation)rotation
+{
+    if(_videoConsumer != nil) {
+        [_videoConsumer gotExternalCVPixelBuffer:pixelBuffer rotation:rotation];
+    }
+}
+
 @end

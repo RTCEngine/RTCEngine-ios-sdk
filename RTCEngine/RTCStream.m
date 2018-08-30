@@ -345,9 +345,12 @@
         NSTimeInterval timeStampSeconds = CACurrentMediaTime();
         int64_t timeStampNs = lroundf(timeStampSeconds * NSEC_PER_SEC);
         
-        RTCVideoFrame *videoFrame = [[RTCVideoFrame alloc] initWithPixelBuffer:pixelBuffer
-                                                                      rotation:(int)rotation
-                                                                   timeStampNs:timeStampNs];
+        RTCCVPixelBuffer *rtcPixelBuffer = [[RTCCVPixelBuffer alloc] initWithPixelBuffer:pixelBuffer];
+        
+        RTCVideoFrame *videoFrame = [[RTCVideoFrame alloc] initWithBuffer:rtcPixelBuffer
+                                                                 rotation:(int)rotation
+                                                              timeStampNs:timeStampNs];
+        
         [videoSource capturer:NULL didCaptureVideoFrame:videoFrame];
         
     }
@@ -355,7 +358,7 @@
 }
 
 
--(void)newFilterFrameAvailable:(CVPixelBufferRef)pixelBuffer
+-(void)newFilterFrameAvailable:(CVPixelBufferRef)pixelBuffer rotation:(RTCVideoRotation)rotation
 {
     if (_useFaceBeauty) {
         
@@ -363,7 +366,7 @@
         int64_t timeStampNs = lroundf(timeStampSeconds * NSEC_PER_SEC);
         
         RTCVideoFrame *videoFrame = [[RTCVideoFrame alloc] initWithPixelBuffer:pixelBuffer
-                                                                      rotation:90
+                                                                      rotation:rotation
                                                                    timeStampNs:timeStampNs];
         
         if (cameraCapturer != nil && videoSource != nil) {
@@ -376,20 +379,21 @@
 
 - (void)didGotVideoFrame:(RTCVideoFrame *)frame
 {
+    
     if(_useFaceBeauty) {
         if (filterManager == nil) {
-            filterManager = [[RTCVideoFilterManager alloc] initWithSize:CGSizeMake(cameraWidth, cameraHeight) delegate:self];
+            filterManager = [[RTCVideoFilterManager alloc] initWithSize:CGSizeMake(frame.width, frame.height) delegate:self];
         }
         
         // todo
         if ([frame.buffer isKindOfClass:[RTCCVPixelBuffer class]]) {
-            
+            RTCCVPixelBuffer* buffer = (RTCCVPixelBuffer*)frame.buffer;
+            [filterManager processCVPixelBuffer:buffer.pixelBuffer rotation:frame.rotation];
         }
        
     } else {
         if(cameraCapturer != nil && videoSource != nil) {
             [videoSource capturer:cameraCapturer didCaptureVideoFrame:frame];
-            NSLog(@"got capture video frame  %ldx%ld", frame.width, frame.height);
         }
     }
 }

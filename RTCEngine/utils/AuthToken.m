@@ -8,6 +8,8 @@
 
 #import "AuthToken.h"
 
+#import "RTCIceServer+JSON.h"
+
 @implementation AuthToken
 
 +(instancetype)parseToken:(NSString *)token
@@ -40,6 +42,16 @@
         NSLog(@"parseToken error,  can not find room appkey userid");
         return nil;
     }
+    
+    NSArray* iceServers = [dict objectForKey:@"iceServers"];
+    
+    NSMutableArray *serverObjects = [NSMutableArray array];
+    
+    for (NSDictionary *serverJSON in iceServers) {
+        RTCIceServer *server = [RTCIceServer serverFromJSONDictionary:serverJSON];
+        [serverObjects addObject:server];
+    }
+    auth.iceServers = serverObjects;
     
     
     return auth;

@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, VideoRotation){
 
 @protocol RTCExternalCapturerConsumer <NSObject>
 
--(void) gotExternalCVPixelBuffer:(CVPixelBufferRef _Nonnull) sampleBuffer
+-(void) gotExternalCVPixelBuffer:(CVPixelBufferRef _Nonnull) pixelBuffer
                 rotation:(VideoRotation)rotation;
 
 @end

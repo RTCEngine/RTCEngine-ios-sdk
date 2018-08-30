@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@import WebRTC;
+
 @import GPUImage;
 
 @interface RTCCVPixelBufferInput : GPUImageOutput
 
-- (BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer;
+- (BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(RTCVideoRotation)rotation;;
 
 @end

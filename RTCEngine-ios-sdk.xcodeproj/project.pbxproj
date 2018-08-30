@@ -265,6 +265,13 @@
 			path = internal;
 			sourceTree = "<group>";
 		};
+		F0DE69F52137E9DD00D534F2 /* codec */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = codec;
+			sourceTree = "<group>";
+		};
 		F0EBC8872114777500BE827F = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +313,7 @@
 		F0EBC8AF211478D000BE827F /* RTCEngine */ = {
 			isa = PBXGroup;
 			children = (
+				F0DE69F52137E9DD00D534F2 /* codec */,
 				F0706EE421228B6B007C713E /* peers */,
 				F0706ECF212166E9007C713E /* vender */,
 				F0706ECA21216340007C713E /* filter */,

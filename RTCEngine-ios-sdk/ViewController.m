@@ -268,7 +268,7 @@ static NSString* ROOM = @"tes_troom";
     if (state == RTCEngineStatusConnected) {
         [self.joinButton setTitle:@"leave" forState:UIControlStateNormal];
         // here, we add Stream
-        
+        connected = TRUE;
         [self.rtcEngine addStream:self.localStream];
     }
 }

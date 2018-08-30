@@ -34,6 +34,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     RTCDefaultVideoDecoderFactory* decoderFactory;
     RTCDefaultVideoEncoderFactory* encoderFactory;
     RTCPeerManager* peerManager;
+    
 }
 
 @property (nonatomic, strong) RTCVideoSource* videoSource;
@@ -129,6 +130,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     roomId = authToken.room;
     localUserId = authToken.userid;
     _authToken = authToken;
+    _iceServers = authToken.iceServers;
     
     [self setupSignlingClient];
 }
@@ -309,12 +311,12 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 -(void) join
 {
-    BOOL planb = FALSE;
+    BOOL planb = TRUE;
     RTCConfiguration *config = [[RTCConfiguration alloc] init];
     config.iceServers = @[];
-//    config.bundlePolicy = RTCBundlePolicyMaxBundle;
-//    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-//    config.iceTransportPolicy = RTCIceTransportPolicyAll;
+    config.bundlePolicy = RTCBundlePolicyMaxBundle;
+    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
+    config.iceTransportPolicy = RTCIceTransportPolicyAll;
     config.sdpSemantics = RTCSdpSemanticsPlanB;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];

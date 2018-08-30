@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@import WebRTC;
 @import GPUImage;
 
 #import "RTCCVPixelBufferInput.h"
@@ -34,7 +35,7 @@
 
 -(void)updateSize:(CGSize)size;
 
--(BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer;
+-(BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(RTCVideoRotation)rotation;
 
 
 @end

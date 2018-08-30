@@ -36,7 +36,8 @@
 }
 
 
-- (BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+- (BOOL)processCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(RTCVideoRotation)rotation
+{
     
     if (dispatch_semaphore_wait(self.frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0) {
         return NO;
