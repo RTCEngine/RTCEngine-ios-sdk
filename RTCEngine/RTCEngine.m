@@ -209,6 +209,13 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+-(void)leaveRoom
+{
+    
+    [self sendLeave];
+    [self close];
+}
+
 
 -(void)generateTestToken:(NSString *)tokenUrl
                appsecret:(NSString *)appsecret
@@ -231,6 +238,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+
 #pragma mark - internal
 
 - (void) setupSignlingClient
@@ -238,7 +246,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     NSURL* url = [[NSURL alloc] initWithString:_authToken.wsURL];
     _manager = [[SocketManager alloc] initWithSocketURL:url
-                                                               config:@{@"log": @YES,
+                                                               config:@{
                                                                         @"compress": @YES,
                                                                         @"forceWebsockets":@YES,
                                                                         @"reconnectAttempts":@5,
@@ -352,6 +360,62 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     _peerconnection = peerconnection;
 }
+
+
+- (void) sendLeave
+{
+    
+    NSDictionary *data = @{};
+    [_socket emit:@"leave" with:@[data]];
+}
+
+
+- (void) close
+{
+    
+    if (_closed) {
+        return;
+    }
+    
+    _closed = true;
+    
+    [_socket disconnect];
+    
+    for (RTCStream* stream in [_localStreams allValues]) {
+        
+        if (stream.stream) {
+            [_peerconnection removeStream:stream.stream];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate rtcengine:self didRemoveLocalStream:stream];
+            });
+        }
+        
+        // todo  use new api
+    }
+    
+    for (RTCStream* stream in [_remoteStreams allValues]) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate rtcengine:self didRemoveRemoteStream:stream];
+        });
+        
+        [stream close];
+    }
+    
+    [_remoteStreams removeAllObjects];
+    [_localStreams removeAllObjects];
+    
+    [peerManager clearAll];
+    
+    if (_peerconnection != nil) {
+        [_peerconnection close];
+        _peerconnection = nil;
+    }
+    
+    // do we need release factory ?
+}
+
 
 
 - (void) handleJoined:(NSDictionary*) data
