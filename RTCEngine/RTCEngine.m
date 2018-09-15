@@ -155,15 +155,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         if (stream.stream != nil) {
             if (stream.videoTrack) {
-                RTCRtpSender* videoSender = [_peerconnection addTrack:stream.videoTrack streamIds:@[stream.streamId]];
-                NSLog(@"videosender %@", videoSender);
+                stream.videoSender = [_peerconnection addTrack:stream.videoTrack streamIds:@[stream.streamId]];
+                NSLog(@"videosender %@",stream.videoSender);
             }
             if (stream.audioTrack) {
-                RTCRtpSender* audioSender = [_peerconnection addTrack:stream.audioTrack streamIds:@[stream.streamId]];
-                NSLog(@"audiosender %@", audioSender);
+                stream.audioSender = [_peerconnection addTrack:stream.audioTrack streamIds:@[stream.streamId]];
+                NSLog(@"audiosender %@", stream.audioSender);
             }
             
-            //[_peerconnection addStream:stream.stream];
         }
         
         stream.peerId = _authToken.userid;
@@ -466,7 +465,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         if (error) {
             NSLog(@"error %@", error);
         }
-        if (_peerconnection.signalingState == RTCSignalingStateStable) {
+        if (self->_peerconnection.signalingState == RTCSignalingStateStable) {
             return;
         }
         RTCMediaConstraints* constrainst = [RTCMediaConstraintUtil answerConstraints];
@@ -726,6 +725,8 @@ didChangeSignalingState:(RTCSignalingState)stateChanged
     if(!remoteStream){
         return;
     }
+    
+    [_remoteStreams removeObjectForKey:stream.streamId];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [_delegate rtcengine:self didRemoveRemoteStream:remoteStream];
