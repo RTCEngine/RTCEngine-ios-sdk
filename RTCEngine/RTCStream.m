@@ -210,15 +210,83 @@
 }
 
 
-- (void) muteAudio:(BOOL)muted
+- (void) muteAudio:(BOOL)muting
 {
     
+    if (_audioTrack) {
+        
+        if(_audioTrack.isEnabled == !muting) {
+            return;
+        }
+        
+        [_audioTrack setIsEnabled:!muting];
+        
+        if (_local) {
+            
+            if (_engine) {
+                NSDictionary* data = @{
+                                       @"audio":TRUE,
+                                       @"id": _peerId,
+                                       @"msid": _stream.streamId,
+                                       @"local":TRUE,
+                                       @"muting":muting
+                                       };
+                
+                [_engine sendConfigure:data];
+            }
+        } else {
+            if(_engine) {
+                NSDictionary* data = @{
+                                       @"audio":TRUE,
+                                       @"id": _peerId,
+                                       @"msid": _stream.streamId,
+                                       @"local":FALSE,
+                                       @"muting":muting
+                                       };
+                [_engine sendConfigure:data];
+            }
+        }
+    }
 }
 
 
--(void) muteVideo:(BOOL)muted
+-(void) muteVideo:(BOOL)muting
 {
     
+    if (_videoTrack) {
+        
+        if(_videoTrack.isEnabled == !muting){
+            return;
+        }
+        
+        [_videoTrack setIsEnabled:!muting];
+        
+        if (_local) {
+            
+            if (_engine) {
+                NSDictionary* data = @{
+                                       @"video":TRUE,
+                                       @"id": _peerId,
+                                       @"msid": _stream.streamId,
+                                       @"local": TRUE,
+                                       @"muting": muting
+                                       };
+                [_engine sendConfigure:data];
+            }
+        } else {
+            
+            if (_engine) {
+                NSDictionary* data = @{
+                                       @"video":TRUE,
+                                       @"id": _peerId,
+                                       @"msid": _stream.streamId,
+                                       @"local":FALSE,
+                                       @"muting": muting
+                                       };
+                [_engine sendConfigure:data];
+            }
+        }
+    }
 }
 
 

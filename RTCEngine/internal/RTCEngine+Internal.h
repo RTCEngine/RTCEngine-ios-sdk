@@ -20,5 +20,7 @@
 @property (nonatomic, strong) RTCPeerConnectionFactory *connectionFactory;
 
 
+-(void)sendConfigure:(NSDictionary*)data;
+
 @end
 

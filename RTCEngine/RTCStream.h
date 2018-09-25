@@ -59,9 +59,9 @@
 
 -(void)switchCamera;
 
--(void)muteAudio:(BOOL)muted;
+-(void)muteAudio:(BOOL)muting;
 
--(void)muteVideo:(BOOL)muted;
+-(void)muteVideo:(BOOL)muting;
 
 -(void)snapshot:(void (^_Nonnull)(UIImage* _Nullable image))snapshotBlock;
 
