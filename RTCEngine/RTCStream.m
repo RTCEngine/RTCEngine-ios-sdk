@@ -225,11 +225,11 @@
             
             if (_engine) {
                 NSDictionary* data = @{
-                                       @"audio":TRUE,
+                                       @"audio":@(TRUE),
                                        @"id": _peerId,
                                        @"msid": _stream.streamId,
-                                       @"local":TRUE,
-                                       @"muting":muting
+                                       @"local":@(TRUE),
+                                       @"muting":@(muting)
                                        };
                 
                 [_engine sendConfigure:data];
@@ -237,11 +237,11 @@
         } else {
             if(_engine) {
                 NSDictionary* data = @{
-                                       @"audio":TRUE,
+                                       @"audio":@(TRUE),
                                        @"id": _peerId,
                                        @"msid": _stream.streamId,
-                                       @"local":FALSE,
-                                       @"muting":muting
+                                       @"local":@(FALSE),
+                                       @"muting":@(muting)
                                        };
                 [_engine sendConfigure:data];
             }
@@ -265,11 +265,11 @@
             
             if (_engine) {
                 NSDictionary* data = @{
-                                       @"video":TRUE,
+                                       @"video":@(TRUE),
                                        @"id": _peerId,
                                        @"msid": _stream.streamId,
-                                       @"local": TRUE,
-                                       @"muting": muting
+                                       @"local": @(TRUE),
+                                       @"muting": @(muting)
                                        };
                 [_engine sendConfigure:data];
             }
@@ -277,11 +277,11 @@
             
             if (_engine) {
                 NSDictionary* data = @{
-                                       @"video":TRUE,
+                                       @"video":@(TRUE),
                                        @"id": _peerId,
                                        @"msid": _stream.streamId,
-                                       @"local":FALSE,
-                                       @"muting": muting
+                                       @"local":@(FALSE),
+                                       @"muting": @(muting)
                                        };
                 [_engine sendConfigure:data];
             }

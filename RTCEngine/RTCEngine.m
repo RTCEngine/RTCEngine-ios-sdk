@@ -371,7 +371,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 - (void) sendConfigure:(NSDictionary *)data
 {
-    [_socket emit:"configure" with:@[data]];
+    [_socket emit:@"configure" with:@[data]];
 }
 
 
