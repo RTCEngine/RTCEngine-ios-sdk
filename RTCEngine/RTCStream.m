@@ -370,21 +370,21 @@
 
 
 
--(void)onMuteAudio:(BOOL)muted
+-(void)onMuteAudio:(BOOL)muting
 {
     if (_delegate) {
         if ([_delegate respondsToSelector:@selector(stream:didMutedAudio:)]) {
-            [_delegate stream:self didMutedAudio:muted];
+            [_delegate stream:self didMutedAudio:muting];
         }
     }
 }
 
 
--(void)onMuteVideo:(BOOL)muted
+-(void)onMuteVideo:(BOOL)muting
 {
     if (_delegate) {
         if ([_delegate respondsToSelector:@selector(stream:didMutedVideo:)]) {
-            [_delegate stream:self didMutedVideo:muted];
+            [_delegate stream:self didMutedVideo:muting];
         }
     }
 }

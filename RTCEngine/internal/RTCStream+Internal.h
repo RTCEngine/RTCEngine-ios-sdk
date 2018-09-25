@@ -39,9 +39,9 @@
 @property (nonatomic,weak) RTCPeerConnection* peerconnection;
 @property (nonatomic,weak) RTCEngine* engine;
 
--(void)onMuteAudio:(BOOL)muted;
+-(void)onMuteAudio:(BOOL)muting;
 
--(void)onMuteVideo:(BOOL)muted;
+-(void)onMuteVideo:(BOOL)muting;
 
 
 -(void)close;
