@@ -57,13 +57,28 @@
 -(void)setBeautyLevel:(CGFloat)level
 {
     _beautyLevel = level;
-    [filter setBeautyLevel:level];
+    
+    //[filter setBeautyLevel:level];
+    
+    // Run on video processing queue
+    runSynchronouslyOnVideoProcessingQueue(^{
+        
+        [self->filter setBeautyLevel:level];
+        
+    });
 }
 
 -(void)setBrightLevel:(CGFloat)level
 {
     _brightLevel = level;
-    [filter setBrightLevel:level];
+    
+    //[filter setBrightLevel:level];
+    
+    runSynchronouslyOnVideoProcessingQueue(^{
+        
+        [self->filter setBrightLevel:level];
+        
+    });
 }
 
 -(void)updateSize:(CGSize)size
