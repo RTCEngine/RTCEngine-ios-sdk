@@ -568,13 +568,18 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }
     
     if([data objectForKey:@"video"]){
-        BOOL muted = ![[data objectForKey:@"video"] boolValue];
-        [remoteStream onMuteVideo:muted];
+        BOOL muting = [[data objectForKey:@"muting"] boolValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [remoteStream onMuteAudio:muting];
+        });
     }
     
     if([data objectForKey:@"audio"]) {
-        BOOL muted = ![[data objectForKey:@"audio"] boolValue];
-        [remoteStream onMuteAudio:muted];
+        BOOL muting = [[data objectForKey:@"muting"] boolValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+             [remoteStream onMuteAudio:muting];
+        });
+       
     }
 }
 
