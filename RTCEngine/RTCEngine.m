@@ -246,10 +246,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     NSURL* url = [[NSURL alloc] initWithString:_authToken.wsURL];
     _manager = [[SocketManager alloc] initWithSocketURL:url
                                                                config:@{
+                                                                        @"log":@NO,
                                                                         @"compress": @YES,
                                                                         @"forceWebsockets":@YES,
                                                                         @"reconnectAttempts":@5,
-                                                                        @"reconnectWait":@10000}];
+                                                                        @"reconnectWait":@10000,
+                                                                        @"connectParams": @{@"token":_authToken.token}
+                                                                        }];
+    
     
     _socket = _manager.defaultSocket;
     __weak id weakSelf = self;
@@ -278,11 +282,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [_socket on:@"offer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         NSDictionary* _data = [data objectAtIndex:0];
         [weakSelf handleOffer:_data];
-    }];
-    
-    [_socket on:@"answer" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
-        NSDictionary* _data = [data objectAtIndex:0];
-        [weakSelf handleAnswer:_data];
     }];
     
     [_socket on:@"peerRemoved" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
@@ -601,6 +600,13 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                    @"sdp": [sdp sdp]
                                    };
             [self->_socket emit:@"addStream" with:@[data]];
+            
+            
+            [_peerconnection setRemoteDescription:_peerconnection.remoteDescription completionHandler:^(NSError * _Nullable error) {
+                
+                NSLog(@"setRemoteDescription %@\n", error);
+                
+            }];
         }];
     }];
 }
@@ -618,6 +624,11 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                    @"sdp": [sdp sdp]
                                    };
             [_socket emit:@"removeStream" with:@[data]];
+            
+            [_peerconnection setRemoteDescription:_peerconnection.remoteDescription completionHandler:^(NSError * _Nullable error) {
+                
+                NSLog(@"setRemoteDescription %@\n", error);
+            }];
         }];
     }];
 }
