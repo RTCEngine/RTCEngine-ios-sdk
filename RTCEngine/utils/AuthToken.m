@@ -34,11 +34,12 @@
     AuthToken* auth = [[AuthToken alloc] init];
     
     auth.room = [dict objectForKey:kAuthTokenRoomKey];
-    auth.userid = [dict objectForKey:kAuthTokenUseridKey];
+    auth.user = [dict objectForKey:kAuthTokenUserKey];
     auth.wsURL = [dict objectForKey:kAuthTokenWsUrlKey];
+    auth.iceTransportPolicy = [dict objectForKey:kAuthTokenIceTransportPolicy];
     auth.token = token;
     
-    if (auth.room == nil || auth.userid == nil || auth.wsURL == nil) {
+    if (auth.room == nil || auth.user == nil || auth.wsURL == nil) {
         NSLog(@"parseToken error,  can not find room appkey userid");
         return nil;
     }
@@ -52,7 +53,6 @@
         [serverObjects addObject:server];
     }
     auth.iceServers = serverObjects;
-    
     
     return auth;
 }

@@ -128,7 +128,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }
     
     roomId = authToken.room;
-    localUserId = authToken.userid;
+    localUserId = authToken.user;
     _authToken = authToken;
     _iceServers = authToken.iceServers;
     
@@ -165,7 +165,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             
         }
         
-        stream.peerId = _authToken.userid;
+        stream.peerId = _authToken.user;
         stream.engine = self;
         [stream setMaxBitrate];
 
@@ -319,10 +319,15 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     BOOL planb = TRUE;
     RTCConfiguration *config = [[RTCConfiguration alloc] init];
-    config.iceServers = @[];
+    RTCIceTransportPolicy iceTransport = RTCIceTransportPolicyAll;
+    if ([_authToken.iceTransportPolicy isEqualToString:@"relay"]) {
+        iceTransport = RTCIceTransportPolicyRelay;
+    }
+    
+    config.iceServers = _authToken.iceServers;
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-    config.iceTransportPolicy = RTCIceTransportPolicyAll;
+    config.iceTransportPolicy = iceTransport;
     config.sdpSemantics = RTCSdpSemanticsPlanB;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
@@ -343,9 +348,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         [peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
             NSDictionary *data = @{
-                                   @"appkey":@"appkey",
                                    @"room":_authToken.room,
-                                   @"user":_authToken.userid,
+                                   @"user":_authToken.user,
                                    @"token":_authToken.token,
                                    @"planb":@(planb),
                                    @"sdp":[sdp sdp]

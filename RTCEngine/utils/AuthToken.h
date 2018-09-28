@@ -12,19 +12,21 @@
 #import "StringUtils.h"
 
 static NSString* _Nonnull kAuthTokenRoomKey = @"room";
-static NSString* _Nonnull kAuthTokenUseridKey = @"user";
+static NSString* _Nonnull kAuthTokenUserKey = @"user";
 static NSString* _Nonnull kAuthTokenAppkeyKey = @"appkey";
 static NSString* _Nonnull kAuthTokenExpiresKey = @"expires";
 static NSString* _Nonnull kAuthTokenRoleKey = @"role";
 static NSString* _Nonnull kAuthTokenIceServerKey = @"iceServers";
 static NSString* _Nonnull kAuthTokenWsUrlKey = @"wsUrl";
+static NSString* _Nonnull kAuthTokenIceTransportPolicy = @"iceTransportPolicy";
 
 @interface AuthToken : NSObject
 
 @property(nonnull, strong) NSString*  wsURL;
-@property(nonnull, strong) NSString*  userid;
+@property(nonnull, strong) NSString*  user;
 @property(nonnull, strong) NSString*  room;
 @property(nonnull, strong) NSString*  token;
+@property(nonnull, strong) NSString*  iceTransportPolicy;
 @property(nonnull, strong) NSArray<RTCIceServer *>* iceServers;
 
 +(instancetype _Nullable)parseToken:(NSString* _Nonnull)token;

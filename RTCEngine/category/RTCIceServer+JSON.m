@@ -12,17 +12,17 @@
 
 
 static NSString const *kRTCICEServerUsernameKey = @"username";
-static NSString const *kRTCICEServerUrlKey = @"url";
+static NSString const *kRTCICEServerUrlsKey = @"urls";
 static NSString const *kRTCICEServerCredentialKey = @"credential";
 
 
 + (RTCIceServer *)serverFromJSONDictionary:(NSDictionary *)dictionary {
-    NSString *url = dictionary[kRTCICEServerUrlKey];
+    NSArray<NSString *> *urls = dictionary[kRTCICEServerUrlsKey];
     NSString *username = dictionary[kRTCICEServerUsernameKey];
     NSString *credential = dictionary[kRTCICEServerCredentialKey];
     username = username ? username : @"";
     credential = credential ? credential : @"";
-    return [[RTCIceServer alloc] initWithURLStrings:@[url]
+    return [[RTCIceServer alloc] initWithURLStrings:urls
                                            username:username
                                          credential:credential];
 }
