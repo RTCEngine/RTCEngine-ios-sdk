@@ -2,6 +2,9 @@ PODS:
   - GoogleWebRTC (1.1.24275)
   - GPUImage (0.1.7)
   - libyuv-iOS (1.0.2)
+  - MetalPetal (0.8.2):
+    - MetalPetal/Core (= 0.8.2)
+  - MetalPetal/Core (0.8.2)
   - Socket.IO-Client-Swift (13.3.0):
     - Starscream (~> 3.0.2)
   - Starscream (3.0.5)
@@ -11,6 +14,7 @@ DEPENDENCIES:
   - GoogleWebRTC
   - GPUImage
   - libyuv-iOS
+  - MetalPetal
   - Socket.IO-Client-Swift
   - Toast
 
@@ -19,6 +23,7 @@ SPEC REPOS:
     - GoogleWebRTC
     - GPUImage
     - libyuv-iOS
+    - MetalPetal
     - Socket.IO-Client-Swift
     - Starscream
     - Toast
@@ -27,10 +32,11 @@ SPEC CHECKSUMS:
   GoogleWebRTC: 1fc8026f3b9c0693ab936ff95fc296c9ebdc5f02
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   libyuv-iOS: 5a154ccc84ec754029886ecb607512731fe30640
+  MetalPetal: b56cc459b0e54acecbb58070c50cb9d2c0f984b2
   Socket.IO-Client-Swift: 0afb192a562db90d50e3f7f7421c06925a3f0179
   Starscream: faf918b2f2eff7d5dd21180646bf015a669673bd
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
-PODFILE CHECKSUM: 1fbad6c4755379140c12232003f3ba6671a00bce
+PODFILE CHECKSUM: fa6b3364dd21d403f7a02505c49708377097848c
 
 COCOAPODS: 1.5.3

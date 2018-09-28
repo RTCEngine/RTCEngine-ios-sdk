@@ -10,6 +10,7 @@ target 'RTCEngine' do
   pod 'Socket.IO-Client-Swift'
   pod 'libyuv-iOS'
   pod 'GPUImage'
+  pod 'MetalPetal'
 end
 
 target 'RTCEngine-ios-sdk' do
