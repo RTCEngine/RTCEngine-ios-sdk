@@ -246,7 +246,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     NSURL* url = [[NSURL alloc] initWithString:_authToken.wsURL];
     _manager = [[SocketManager alloc] initWithSocketURL:url
                                                                config:@{
-                                                                        @"log":@NO,
+                                                                        @"log":@YES,
                                                                         @"compress": @YES,
                                                                         @"forceWebsockets":@YES,
                                                                         @"reconnectAttempts":@5,
@@ -256,6 +256,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     
     _socket = _manager.defaultSocket;
+    _socket = [_manager socketForNamespace:@"/channel"];
     __weak id weakSelf = self;
     [_socket on:@"connect" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         [weakSelf join];
