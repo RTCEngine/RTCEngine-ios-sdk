@@ -83,6 +83,12 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 -(void)addStream:(RTCStream* _Nonnull)stream;
 
+
+- (void) publish:(RTCStream* _Nonnull) stream;
+
+- (void) unpublish:(RTCStream* _Nonnull) stream;
+
+
 -(void)removeStream:(RTCStream* _Nonnull)stream;
 
 -(void)joinRoomWithToken:(NSString* _Nonnull)token;

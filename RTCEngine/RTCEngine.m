@@ -41,6 +41,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 @property (nonatomic, strong) NSMutableDictionary* localStreams;
 @property (nonatomic, strong) NSMutableDictionary* remoteStreams;
+@property (nonatomic, strong) RTCStream* localStream;
+
 
 @property (nonatomic, assign) NSUInteger retryCount;
 @property (nonatomic, strong) RTCPeerConnection *peerconnection;
@@ -76,7 +78,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         peerManager = [[RTCPeerManager alloc] init];
         
         _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
-        //_connectionFactory = [[RTCPeerConnectionFactory alloc] init];
+        
         _iceConnected = false;
         _closed = false;
     }
