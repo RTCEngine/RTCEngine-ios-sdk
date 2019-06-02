@@ -51,7 +51,6 @@ typedef NS_ENUM(NSUInteger,RTCEngineLogLevel){
 
 
 
-
 typedef NS_ENUM(NSInteger,RTCEngineCaptureMode){
     
     RTCEngine_Capture_Default,
@@ -68,6 +67,17 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
     RTCEngineStatusDisConnected,
 };
 
+
+@interface RTCConfig : NSObject
+
+@property(nonnull, strong) NSString*  signallingServer;
+@property(nonnull, strong) NSString*  iceTransportPolicy;
+@property(nonnull, strong) NSArray<RTCIceServer *>* iceServers;
+
+@end
+
+
+
 @protocol  RTCEngineDelegate;
 
 @interface RTCEngine : NSObject
@@ -81,27 +91,24 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 + (instancetype _Nonnull)sharedInstance;
 
--(void)addStream:(RTCStream* _Nonnull)stream;
+- (nonnull instancetype) initWichConfig:(RTCConfig*)config delegate:(id<RTCEngineDelegate>) delegate;
 
 
-- (void) publish:(RTCStream* _Nonnull) stream;
+- (void) publish:(RTCStream* _Nonnull) localStream;
 
-- (void) unpublish:(RTCStream* _Nonnull) stream;
+- (void) unpublish:(RTCStream* _Nonnull) localStream;
 
+- (void) subscribe:(NSString*) streamId;
 
--(void)removeStream:(RTCStream* _Nonnull)stream;
+- (void) unsubscribe:(NSString*) streamId;
 
--(void)joinRoomWithToken:(NSString* _Nonnull)token;
+- (void) joinRoom:(NSString* _Nonnull) roomId;
+
 
 -(void)leaveRoom;
 
 -(void)enableSpeakerphone:(BOOL)enable;
 
--(void)generateTestToken:(NSString* _Nonnull)tokenUrl
-               appsecret:(NSString* _Nonnull )appsecret
-                    room:(NSString* _Nonnull )room
-                  userId:(NSString* _Nonnull )userId
-               withBlock:(void (^_Nonnull)(NSString* token,NSError* error))tokenBlock;
 
 @end
 
@@ -109,23 +116,27 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 @protocol RTCEngineDelegate <NSObject>
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine didJoined:(NSString *) peerId;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine didLeave:(NSString *) peerId;
+- (void) rtcengineDidJoined;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didStateChange:(RTCEngineStatus) state;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStateChange:(RTCEngineStatus) state;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didAddLocalStream:(RTCStream *) stream;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didLocalStreamPublished:(RTCStream *) stream;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didRemoveLocalStream:(RTCStream *) stream;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didLocalStreamUnPublished:(RTCStream *) stream;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didAddRemoteStream:(RTCStream *) stream;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamPublished:(NSString *) streamId;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didRemoveRemoteStream:(RTCStream *) stream;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamUnpublished:(NSString *) streamId;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didOccurError:(RTCEngineErrorCode) code;
 
--(void) rtcengine:(RTCEngine* _Nonnull) engine  didReceiveMessage:(NSDictionary*) message;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamSubscribed:(RTCStream *) stream;
+
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamUnsubscribed:(RTCStream *) stream;
+
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didOccurError:(RTCEngineErrorCode) code;
+
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didReceiveMessage:(NSDictionary*) message;
 
 @end
 

@@ -17,7 +17,7 @@
 #import "RTCEngine+Internal.h"
 #import "RTCEngine.h"
 
-@interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate>
+@interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate,RTCPeerConnectionDelegate>
 {
     NSInteger minWidth;
     NSInteger minHeight;
@@ -51,8 +51,8 @@
 -(instancetype)init
 {
     self = [super init];
+    _streamId = [[NSUUID UUID] UUIDString];
     
-
     return self;
 }
 
@@ -69,7 +69,7 @@
     _video = video;
     _audio = audio;
     _attributes = [NSDictionary dictionary];
-    _streamId = [[NSUUID UUID] UUIDString];
+   
     operationQueue = [[NSOperationQueue alloc] init];
     [operationQueue setMaxConcurrentOperationCount:1];
     usingFrontCamera = YES;
