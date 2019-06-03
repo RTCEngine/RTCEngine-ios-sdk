@@ -19,30 +19,28 @@
     
 }
 
-@property(nonatomic, strong) RTCMediaStream* stream;
+
 
 @property (nonatomic, strong) RTCAudioTrack* audioTrack;
 @property (nonatomic, strong) RTCVideoTrack* videoTrack;
 
-@property (nonatomic, strong) RTCRtpSender* audioSender;
-@property (nonatomic, strong) RTCRtpSender* videoSender;
+
 @property (nonatomic, strong) RTCRtpTransceiver* audioTransceiver;
 @property (nonatomic, strong) RTCRtpTransceiver* videoTransceiver;
 @property (nonatomic, strong) RTCPeerConnection* peerconnection;
 
 
-
-@property(nonatomic, copy, readwrite) NSString* peerId;
 @property(nonatomic, copy, readwrite) NSString* streamId;
 @property(nonatomic, copy) NSString* publisherId;
 
 @property (nonatomic,assign,readwrite) BOOL local;
+
 @property (nonatomic,assign,readwrite) BOOL video;
 @property (nonatomic,assign,readwrite) BOOL audio;
 @property (nonatomic,retain,readwrite) RTCView* view;
 
 
-@property (nonatomic,weak) RTCPeerConnection* peerconnection;
+@property (nonatomic,weak) RTCPeerConnectionFactory* factory;
 @property (nonatomic,weak) RTCEngine* engine;
 
 -(void)onMuteAudio:(BOOL)muting;

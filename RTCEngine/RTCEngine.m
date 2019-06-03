@@ -9,6 +9,7 @@
 #import "RTCEngine.h"
 
 
+
 @import WebRTC;
 
 #import <SocketIO/SocketIO-Swift.h>
@@ -30,31 +31,24 @@
 
 static RTCEngine *sharedRTCEngineInstance = nil;
 
-@interface RTCEngine () <RTCPeerConnectionDelegate,RTCVideoCapturerDelegate>
+@interface RTCEngine () <RTCVideoCapturerDelegate>
 {
-    NSString    *roomId;
+    NSString *roomId;
     RTCDefaultVideoDecoderFactory* decoderFactory;
     RTCDefaultVideoEncoderFactory* encoderFactory;
-    RTCPeerManager* peerManager;
-    
     NSMutableDictionary* streamsMap;
 }
 
 
+
 @property (nonatomic, strong) RTCConfig* config;
-@property (nonatomic, strong) RTCVideoSource* videoSource;
 
 @property (nonatomic, strong) NSMutableDictionary* localStreams;
 @property (nonatomic, strong) NSMutableDictionary* remoteStreams;
 @property (nonatomic, strong) RTCStream* localStream;
 
-
-@property (nonatomic, strong) RTCPeerConnection *peerconnection;
 @property (nonatomic, strong) NSArray<RTCIceServer*> *iceServers;
 @property (nonatomic)   BOOL   closed;
-@property (nonatomic)  NSOperationQueue*  operationQueue;
-@property (atomic)  BOOL iceConnected;
-
 
 @end
 
@@ -78,34 +72,15 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
         encoderFactory = [[RTCDefaultVideoEncoderFactory alloc] init];
-        peerManager = [[RTCPeerManager alloc] init];
         
         streamsMap = [NSMutableDictionary dictionary];
         
-        
         _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
         
-        _iceConnected = false;
         _closed = false;
     }
     
     return self;
-}
-
-
-+(instancetype) sharedInstanceWithDelegate:(id<RTCEngineDelegate>)delegate
-{
-    
-    @synchronized(self) {
-        if (!sharedRTCEngineInstance) {
-            sharedRTCEngineInstance = [[self alloc] initWithDelegate: delegate];
-        }
-        // just in case
-        if (!sharedRTCEngineInstance.delegate) {
-            sharedRTCEngineInstance.delegate = delegate;
-        }
-    }
-    return  sharedRTCEngineInstance;
 }
 
 
@@ -120,19 +95,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
--(void)joinRoom:(NSString *)room
+- (RTCStream*)createLocalStream
 {
     
-    roomId = room;
-    
-    if (_status == RTCEngineStatusConnected) {
-        return;
-    }
-    
-    [self setupSignlingClient];
+    RTCStream* stream = [[RTCStream alloc] init];
+    stream.local = true;
+    stream.factory = _connectionFactory;
+    return stream;
 }
-
-
 
 - (void) publish:(RTCStream *)stream
 {
@@ -259,8 +229,20 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }
     
     [_remoteStreams removeObjectForKey:streamId];
+}
+
+
+
+-(void)joinRoom:(NSString *)room
+{
     
+    roomId = room;
     
+    if (_status == RTCEngineStatusConnected) {
+        return;
+    }
+    
+    [self setupSignlingClient];
 }
 
 
@@ -270,7 +252,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [self sendLeave];
     [self close];
 }
-
 
 
 
@@ -400,13 +381,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     [_remoteStreams removeAllObjects];
     [_localStreams removeAllObjects];
-    
-    [peerManager clearAll];
-    
-    if (_peerconnection != nil) {
-        [_peerconnection close];
-        _peerconnection = nil;
-    }
     
 }
 

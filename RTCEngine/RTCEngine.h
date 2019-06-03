@@ -87,12 +87,11 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 @property (nonatomic, readonly) RTCEngineStatus status;
 
-+ (instancetype _Nonnull)sharedInstanceWithDelegate:(id<RTCEngineDelegate> _Nonnull)delegate;
 
-+ (instancetype _Nonnull)sharedInstance;
 
 - (nonnull instancetype) initWichConfig:(RTCConfig*)config delegate:(id<RTCEngineDelegate>) delegate;
 
+- (RTCStream*) createLocalStream;
 
 - (void) publish:(RTCStream* _Nonnull) localStream;
 
@@ -104,11 +103,7 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 - (void) joinRoom:(NSString* _Nonnull) roomId;
 
-
--(void)leaveRoom;
-
--(void)enableSpeakerphone:(BOOL)enable;
-
+- (void) leaveRoom;
 
 @end
 

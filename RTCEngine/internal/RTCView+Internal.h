@@ -14,6 +14,9 @@
 
 -(UIImage*) snapshot;
 
--(void)changeVideoSize:(CGSize)size;
+
+- (void)setVideoTrack:(RTCVideoTrack*)track;
+
+- (void)changeVideoSize:(CGSize)size;
 
 @end

@@ -20,8 +20,8 @@
 
 @protocol RTCStreamDelegate <NSObject>
 
--(void)stream:(RTCStream* _Nullable)stream  didMutedVideo:(BOOL)muted;
 
+-(void)stream:(RTCStream* _Nullable)stream  didMutedVideo:(BOOL)muted;
 -(void)stream:(RTCStream* _Nullable)stream  didMutedAudio:(BOOL)muted;
 
 @end
@@ -29,10 +29,7 @@
 @interface RTCStream : NSObject
 
 @property (nonatomic,readonly) BOOL local;
-@property (nonatomic,readonly) BOOL audio;
-@property (nonatomic,readonly) BOOL video;
 @property (nonatomic,readonly) NSString* _Nonnull streamId;
-@property (nonatomic,readonly) NSString* _Nullable peerId;
 @property (nonatomic,readonly) RTCView* _Nullable view;
 
 @property (nonatomic,assign) float beautyLevel;
@@ -48,6 +45,7 @@
 -(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;
 
 -(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video delegate:(nullable id<RTCStreamDelegate>)delegate;
+
 
 -(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video videoProfile:(RTCEngineVideoProfile)profile delegate:(nullable id<RTCStreamDelegate> )delegate;
 

@@ -41,6 +41,4 @@ typedef NS_ENUM(NSUInteger, RTCVideoViewScaleMode)
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-- (void)setStream:(RTCStream *)stream;
-
 @end

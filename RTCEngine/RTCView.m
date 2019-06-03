@@ -14,12 +14,14 @@
 #import "RTCStream+Internal.h"
 #import "RTCView+Internal.h"
 
-@interface RTCView() <RTCEAGLVideoViewDelegate>
+
+
+@interface RTCView() <RTCVideoViewDelegate>
 {
     RTCEAGLVideoView *subview;
 }
 
-@property (nonatomic, strong)  RTCMediaStream* stream;
+@property (nonatomic, strong)  RTCVideoTrack* track;
 
 @end
 
@@ -112,29 +114,19 @@
 }
 
 
--(void)setStream:(RTCStream*)rtcStream
+- (void) setVideoTrack:(RTCVideoTrack *)track
 {
     
-    if(!rtcStream){
-        return;
-    }
-    if (!rtcStream.stream) {
-        return;
-    }
+    RTCVideoTrack* oldValue = _track;
     
-    RTCMediaStream* stream =  rtcStream.stream;
-    RTCMediaStream*  oldValue = _stream;
-    
-    if (oldValue != stream) {
-        if (oldValue && oldValue.videoTracks.count > 0) {
-            [oldValue.videoTracks[0] removeRenderer:self];
+    if (oldValue != track) {
+        if (oldValue != nil) {
+            [oldValue removeRenderer:self];
         }
         
-        _stream = stream;
+        _track = track;
         
-        if (stream && stream.videoTracks.count > 0) {
-            [stream.videoTracks[0] addRenderer:self];
-        }
+        [track addRenderer:self];
     }
 }
 
@@ -142,7 +134,6 @@
 -(void)renderFrame:(RTCVideoFrame *)frame
 {
     // todo it is hack,  need to remove this
-    
     
     
     if(subview==nil){

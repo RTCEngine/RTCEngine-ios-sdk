@@ -31,8 +31,7 @@
     
     RTCCameraVideoCapturer* cameraCapturer;
     RTCVideoSource* videoSource;
-    
-    NSOperationQueue*  operationQueue;
+    RTCAudioSource* aduioSource;
     
     RTCVideoFrameConsumer* videoFrameConsumer;
     RTCVideoFilterManager* filterManager;
@@ -51,7 +50,6 @@
 -(instancetype)init
 {
     self = [super init];
-    _streamId = [[NSUUID UUID] UUIDString];
     
     return self;
 }
@@ -69,9 +67,8 @@
     _video = video;
     _audio = audio;
     _attributes = [NSDictionary dictionary];
-   
-    operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue setMaxConcurrentOperationCount:1];
+    _streamId = [[NSUUID UUID] UUIDString];
+    
     usingFrontCamera = YES;
     [self setupVideoProfile:RTCEngine_VideoProfile_240P];
     _view = [[RTCView alloc] initWithFrame:CGRectZero];
@@ -82,12 +79,6 @@
 -(NSString*)streamId
 {
     return _streamId;
-}
-
-
--(NSString*)peerId
-{
-    return _peerId;
 }
 
 
@@ -139,47 +130,35 @@
 
 -(void) setupLocalMedia
 {
-    if (_stream != nil) {
-        return;
-    }
-    
-    RTCPeerConnectionFactory* factory = [RTCEngine sharedInstance].connectionFactory;
-    
-    _stream = [factory mediaStreamWithStreamId:_streamId];
     
     videoFrameConsumer = [[RTCVideoFrameConsumer alloc] initWithDelegate:self];
     
-    videoSource = [factory videoSource];
+    videoSource = [_factory videoSource];
     
     // when we use external captuer
     if(_videoCaptuer != nil) {
         
         [_videoCaptuer setVideoConsumer:self];
-        _videoTrack = [factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
-        [_stream addVideoTrack:_videoTrack];
+        _videoTrack = [_factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
+        
     } else if (_video) {
         // todo adapter
         //[videoSource adaptOutputFormatToWidth:<#(int)#> height:<#(int)#> fps:<#(int)#>];
         
         cameraCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoFrameConsumer];
-        _videoTrack = [factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
-        [_stream addVideoTrack:_videoTrack];
-        [self startCapture];
+        _videoTrack = [_factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
         
-        NSLog(@"video track %@", _videoTrack.trackId);
+        [self startCapture];
     }
     
     if (_audio) {
-        RTCAudioSource* audioSource = [factory audioSourceWithConstraints:nil];
-        _audioTrack = [factory audioTrackWithSource:audioSource trackId:[[NSUUID UUID] UUIDString]];
-        
-        [_stream addAudioTrack:_audioTrack];
-        
+        audioSource = [_factory audioSourceWithConstraints:nil];
+        _audioTrack = [_factory audioTrackWithSource:audioSource trackId:[[NSUUID UUID] UUIDString]];
         NSLog(@"audio track %@", _audioTrack.trackId);
     }
     
-    if (_view != nil) {
-        [_view setStream:self];
+    if (_videoTrack != nil) {
+        [_view setVideoTrack:_videoTrack];
     }
 }
 
@@ -194,7 +173,10 @@
 
 -(void)close
 {
-    [self stopCapture];
+    
+    if (cameraCapturer != nil) {
+         [self stopCapture];
+    }
     
     if (_videoTrack ) {
         _videoTrack = nil;
@@ -204,8 +186,9 @@
         _audioTrack = nil;
     }
     
-    if (_stream) {
-        _stream = nil;
+    if (_peerconnection != nil) {
+        [_peerconnection close];
+        _peerconnection = nil;
     }
 }
 
@@ -265,11 +248,6 @@
             
             if (_engine) {
                 NSDictionary* data = @{
-                                       @"video":@(TRUE),
-                                       @"id": _peerId,
-                                       @"msid": _stream.streamId,
-                                       @"local": @(TRUE),
-                                       @"muting": @(muting)
                                        };
                 [_engine sendConfigure:data];
             }
@@ -277,11 +255,6 @@
             
             if (_engine) {
                 NSDictionary* data = @{
-                                       @"video":@(TRUE),
-                                       @"id": _peerId,
-                                       @"msid": _stream.streamId,
-                                       @"local":@(FALSE),
-                                       @"muting": @(muting)
                                        };
                 [_engine sendConfigure:data];
             }
@@ -339,8 +312,9 @@
 
 -(void)switchCamera
 {
+    
     usingFrontCamera = !usingFrontCamera;
-    if ([cameraCapturer isKindOfClass:[RTCCameraVideoCapturer class]]) {
+    if (cameraCapturer != nil && [cameraCapturer isKindOfClass:[RTCCameraVideoCapturer class]]) {
         [self startCapture];
     }
 }
@@ -354,18 +328,6 @@
 -(void)setMaxBitrate
 {
     // todo
-}
-
-- (void)setMaxBitrate:(NSUInteger)maxBitrate forVideoSender:(RTCRtpSender *)sender {
-    if (maxBitrate <= 0) {
-        return;
-    }
-    
-//    RTCRtpParameters *parametersToModify = sender.parameters;
-//    for (RTCRtpEncodingParameters *encoding in parametersToModify.encodings) {
-//        encoding.maxBitrateBps = @(maxBitrate);
-//    }
-//    [sender setParameters:parametersToModify];
 }
 
 
