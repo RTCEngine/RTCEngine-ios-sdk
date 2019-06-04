@@ -67,9 +67,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         _localStreams = [NSMutableDictionary dictionary];
         _remoteStreams = [NSMutableDictionary dictionary];
         
-        _operationQueue = [[NSOperationQueue alloc] init];
-        [_operationQueue setMaxConcurrentOperationCount:1];
-        
         decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
         encoderFactory = [[RTCDefaultVideoEncoderFactory alloc] init];
         
@@ -89,7 +86,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 {
     
     self = [self initWithDelegate:delegate];
-    self.iceServers = config.iceServers
+    self.iceServers = config.iceServers;
     self.config = config;
     return self;
 }
@@ -302,15 +299,17 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }];
     
     
-    [_socket on:@"streampublished" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"streampublished" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
-        
-        
+        NSDictionary* _data = [data objectAtIndex:0];
+        [self handleStreamPublished:_data];
     }];
     
     
-    [_socket on:@"streamunpublished" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
+    [_socket on:@"streamunpublished" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
+        NSDictionary* _data = [data objectAtIndex:0];
+        [self handleStreamUnpublished:_data];
     }];
     
     
@@ -362,13 +361,13 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     for (RTCStream* stream in [_localStreams allValues]) {
         
-        if (stream.stream) {
-            [_peerconnection removeStream:stream.stream];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate rtcengine:self didRemoveLocalStream:stream];
-            });
-        }
+//        if (stream.stream) {
+//            [_peerconnection removeStream:stream.stream];
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [_delegate rtcengine:self didRemoveLocalStream:stream];
+//            });
+//        }
         
         // todo  use new api
     }
@@ -376,7 +375,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     for (RTCStream* stream in [_remoteStreams allValues]) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate rtcengine:self didRemoveRemoteStream:stream];
+            //[_delegate rtcengine:self didRemoveRemoteStream:stream];
         });
         
         [stream close];
@@ -410,7 +409,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     for(NSDictionary* streamDict in streams){
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate rtcengine:self didStreamPublished:[streamDict objectForKey:@"publisherId"]];
-        })
+        });
     }
 }
 
@@ -433,7 +432,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate rtcengine:self didLocalStreamPublished:stream];
+            [self->_delegate rtcengine:self didLocalStreamPublished:stream];
         });
     }];
     
@@ -462,7 +461,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate rtcengine:self didStreamSubscribed:stream];
+            [self->_delegate rtcengine:self didStreamSubscribed:stream];
         });
     
     }];
@@ -522,7 +521,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                                    @"stream": @{
                                            @"publisherId": stream.streamId,
                                            @"data": @{
-                                                   @"bitrate":500
+                                                   @"bitrate":@500
                                                    }
                                            }
                                    };
@@ -534,7 +533,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
                 NSDictionary* _data = [data objectAtIndex:0];
                 [weakSelf handleLocalStream:stream publishedWithData:_data];
             }];
-        }]
+        }];
     }];
 }
 
@@ -554,7 +553,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate rtcengine:self didLocalStreamUnPublished:stream];
+            [_delegate rtcengine:self didLocalStreamUnPublished:stream];
         });
     }];
 }
@@ -590,7 +589,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             }];
             
         }];
-    }]
+    }];
 }
 
 
@@ -611,7 +610,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate rtcengine:self didStreamUnsubscribed:stream];
+            [self.delegate rtcengine:self didStreamUnsubscribed:stream];
         });
     }];
 }

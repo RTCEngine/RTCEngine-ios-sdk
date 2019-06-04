@@ -7,7 +7,7 @@ target 'RTCEngine' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # Pods for RTCEngine
   pod 'GoogleWebRTC'
-  pod 'Socket.IO-Client-Swift'
+  pod 'Socket.IO-Client-Swift', '~> 13.3.0'
   pod 'libyuv-iOS'
   pod 'GPUImage'
 end

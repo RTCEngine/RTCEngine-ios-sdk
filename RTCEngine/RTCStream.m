@@ -31,7 +31,7 @@
     RTCCameraVideoCapturer* cameraCapturer;
     
     RTCVideoSource* videoSource;
-    RTCAudioSource* aduioSource;
+    RTCAudioSource* audioSource;
     
     RTCVideoFrameConsumer* videoFrameConsumer;
     RTCVideoFilterManager* filterManager;
@@ -347,7 +347,6 @@
 -(NSDictionary*)dumps
 {
     return @{
-             @"id":_peerId,
              @"msid":_streamId,
              @"local":@(_local),
              @"bitrate":@(maxVideoBitrate),
@@ -362,19 +361,19 @@
                 rotation:(VideoRotation)rotation
 {
     
-    if (_videoCaptuer != nil && videoSource != nil) {
-        NSTimeInterval timeStampSeconds = CACurrentMediaTime();
-        int64_t timeStampNs = lroundf(timeStampSeconds * NSEC_PER_SEC);
-        
-        RTCCVPixelBuffer *rtcPixelBuffer = [[RTCCVPixelBuffer alloc] initWithPixelBuffer:pixelBuffer];
-        
-        RTCVideoFrame *videoFrame = [[RTCVideoFrame alloc] initWithBuffer:rtcPixelBuffer
-                                                                 rotation:(int)rotation
-                                                              timeStampNs:timeStampNs];
-        
-        [videoSource capturer:NULL didCaptureVideoFrame:videoFrame];
-        
-    }
+//    if (_videoCaptuer != nil && videoSource != nil) {
+//        NSTimeInterval timeStampSeconds = CACurrentMediaTime();
+//        int64_t timeStampNs = lroundf(timeStampSeconds * NSEC_PER_SEC);
+//        
+//        RTCCVPixelBuffer *rtcPixelBuffer = [[RTCCVPixelBuffer alloc] initWithPixelBuffer:pixelBuffer];
+//
+//        RTCVideoFrame *videoFrame = [[RTCVideoFrame alloc] initWithBuffer:rtcPixelBuffer
+//                                                                 rotation:(int)rotation
+//                                                              timeStampNs:timeStampNs];
+//
+//        [videoSource capturer:NULL didCaptureVideoFrame:videoFrame];
+//
+//    }
     
 }
 

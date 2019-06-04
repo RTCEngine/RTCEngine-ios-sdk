@@ -2,16 +2,16 @@ PODS:
   - GoogleWebRTC (1.1.27828)
   - GPUImage (0.1.7)
   - libyuv-iOS (1.0.2)
-  - Socket.IO-Client-Swift (15.1.0):
-    - Starscream (~> 3.1)
-  - Starscream (3.1.0)
+  - Socket.IO-Client-Swift (13.3.1):
+    - Starscream (~> 3.0.2)
+  - Starscream (3.0.6)
   - Toast (4.0.0)
 
 DEPENDENCIES:
   - GoogleWebRTC
   - GPUImage
   - libyuv-iOS
-  - Socket.IO-Client-Swift
+  - Socket.IO-Client-Swift (~> 13.3.0)
   - Toast
 
 SPEC REPOS:
@@ -27,10 +27,10 @@ SPEC CHECKSUMS:
   GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   libyuv-iOS: 5a154ccc84ec754029886ecb607512731fe30640
-  Socket.IO-Client-Swift: 7cb44c0ffb86e158cee32d0642d30ec5fdcf8f61
-  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  Socket.IO-Client-Swift: 79f8f85fa44881838175a20f9bd2c32bef2c9d37
+  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
-PODFILE CHECKSUM: 1fbad6c4755379140c12232003f3ba6671a00bce
+PODFILE CHECKSUM: cf5dbbab1bd94d13fee847a2989eae11b09e8c77
 
 COCOAPODS: 1.5.3

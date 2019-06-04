@@ -21,7 +21,6 @@ FOUNDATION_EXPORT const unsigned char RTCEngineVersionString[];
 #import "RTCView.h"
 #import "RTCStream.h"
 #import "RTCVideoProfile.h"
-#import "RTCExternalCapturer.h"
 
 
 typedef NS_ENUM(NSInteger, RTCEngineErrorCode) {
@@ -91,7 +90,6 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 - (nonnull instancetype) initWichConfig:(RTCConfig*)config delegate:(id<RTCEngineDelegate>) delegate;
 
 - (RTCStream*) createLocalStreamWithAudio:(BOOL)audio video:(BOOL)video;
-
 
 - (void) publish:(RTCStream* _Nonnull) localStream;
 
