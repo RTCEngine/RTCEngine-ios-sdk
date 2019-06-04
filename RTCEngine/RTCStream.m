@@ -16,7 +16,7 @@
 #import "RTCEngine+Internal.h"
 #import "RTCEngine.h"
 
-@interface RTCStream() <RTCVideoFrameDelegate,RTCVideoFilterOutputDelegate,RTCPeerConnectionDelegate>
+@interface RTCStream() <RTCVideoFrameDelegate,RTCPeerConnectionDelegate>
 {
     NSInteger minWidth;
     NSInteger minHeight;
@@ -416,6 +416,184 @@
             [videoSource capturer:cameraCapturer didCaptureVideoFrame:frame];
         }
     }
+}
+
+
+
+-(NSString*)iceConnectionState:(RTCIceConnectionState)newState
+{
+    
+    NSString*  state;
+    switch (newState) {
+        case RTCIceConnectionStateNew:
+            state = @"RTCIceConnectionStateNew";
+            break;
+        case RTCIceConnectionStateCompleted:
+            state = @"RTCIceConnectionStateCompleted";
+            break;
+        case RTCIceConnectionStateChecking:
+            state = @"RTCIceConnectionStateChecking";
+            break;
+        case RTCIceConnectionStateConnected:
+            state = @"RTCIceConnectionStateConnected";
+            break;
+        case RTCIceConnectionStateClosed:
+            state = @"RTCIceConnectionStateClosed";
+            break;
+        case RTCIceConnectionStateFailed:
+            state = @"RTCIceConnectionStateFailed";
+            break;
+        case RTCIceConnectionStateDisconnected:
+            state = @"RTCIceConnectionStateDisconnected";
+            break;
+        default:
+            state = @"";
+            break;
+    }
+    return state;
+}
+
+- (NSString*) peerConnectionState:(RTCPeerConnectionState)newState
+{
+    
+    NSString* state;
+    switch (newState) {
+        case RTCPeerConnectionStateNew:
+            state = @"RTCPeerConnectionStateNew";
+            break;
+        case RTCPeerConnectionStateConnecting:
+            state = @"RTCPeerConnectionStateConnecting";
+            break;
+        case RTCPeerConnectionStateConnected:
+            state = @"RTCPeerConnectionStateConnected";
+            break;
+        case RTCPeerConnectionStateDisconnected:
+            state = @"RTCPeerConnectionStateDisconnected";
+            break;
+        case RTCPeerConnectionStateFailed:
+            state = @"RTCPeerConnectionStateFailed";
+            break;
+        case RTCPeerConnectionStateClosed:
+            state = @"RTCPeerConnectionStateClosed";
+            break;
+        default:
+            state = @"";
+            break;
+    }
+    return state;
+}
+
+
+#pragma peerconnection delegate
+
+
+
+
+
+/** Called when the SignalingState changed. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeSignalingState:(RTCSignalingState)stateChanged
+{
+    
+}
+
+/** Called when media is received on a new stream from remote peer. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection didAddStream:(RTCMediaStream *)stream
+{
+    
+    NSLog(@"peerConnection didAddStream");
+}
+
+/** Called when a remote peer closes a stream.
+ *  This is not called when RTCSdpSemanticsUnifiedPlan is specified.
+ */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection didRemoveStream:(RTCMediaStream *)stream
+{
+    NSLog(@"peerConnection didRemoveStream");
+}
+
+/** Called when negotiation is needed, for example ICE has restarted. */
+- (void)peerConnectionShouldNegotiate:(RTCPeerConnection *)peerConnection
+{
+    NSLog(@"peerConnectionShouldNegotiate");
+}
+
+/** Called any time the IceConnectionState changes. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeIceConnectionState:(RTCIceConnectionState)newState
+{
+    NSString* state = [self iceConnectionState:newState];
+    
+    NSLog(@"ice state %@", state);
+    
+}
+
+/** Called any time the IceGatheringState changes. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeIceGatheringState:(RTCIceGatheringState)newState
+{
+    
+}
+
+/** New ice candidate has been found. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didGenerateIceCandidate:(RTCIceCandidate *)candidate
+{
+    NSLog(@"IceCandidate %@", candidate.sdp);
+    
+}
+
+/** Called when a group of local Ice candidates have been removed. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didRemoveIceCandidates:(NSArray<RTCIceCandidate *> *)candidates
+{
+    
+}
+
+/** New data channel has been opened. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+    didOpenDataChannel:(RTCDataChannel *)dataChannel
+{
+}
+
+/** Called when signaling indicates a transceiver will be receiving media from
+ *  the remote endpoint.
+ *  This is only called with RTCSdpSemanticsUnifiedPlan specified.
+ */
+
+/** Called any time the PeerConnectionState changes. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didChangeConnectionState:(RTCPeerConnectionState)newState
+{
+    
+    NSString* state = [self peerConnectionState:newState];
+    
+    NSLog(@"peer connection state %@", state);
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
+{
+    
+    NSLog(@"startReceiving %@", transceiver.receiver.receiverId);
+}
+
+/** Called when a receiver and its track are created. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+        didAddReceiver:(RTCRtpReceiver *)rtpReceiver
+               streams:(NSArray<RTCMediaStream *> *)mediaStreams
+{
+    
+    NSLog(@"AddReceiver %@", rtpReceiver.receiverId);
+    
+}
+
+/** Called when the receiver and its track are removed. */
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+     didRemoveReceiver:(RTCRtpReceiver *)rtpReceiver
+{
+    
+    NSLog(@"RemoveReceiver %@", rtpReceiver.receiverId);
 }
 
 @end

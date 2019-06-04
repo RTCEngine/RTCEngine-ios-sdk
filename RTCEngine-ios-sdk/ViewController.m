@@ -23,9 +23,9 @@
 
 
 
-static NSString* SignallingsServer = @"http://192.168.202.208:3888/";
+static NSString* SignallingsServer = @"http://192.168.1.3:3888/";
 
-static NSString* ROOM = @"tes_troom";
+static NSString* ROOM = @"testroom";
 
 
 @interface ViewController () <RTCEngineDelegate, RTCStreamDelegate>

@@ -117,7 +117,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     RTCIceTransportPolicy iceTransport = RTCIceTransportPolicyAll;
     
     
-    config.iceServers = _iceServers;
+    //config.iceServers = _iceServers;
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
     config.iceTransportPolicy = iceTransport;
@@ -516,6 +516,12 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         [stream.peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
             
+            
+            if (error) {
+                NSLog(@"error %@",error);
+                return;
+            }
+            
             NSDictionary* data = @{
                                    @"sdp": sdp.sdp,
                                    @"stream": @{
@@ -596,7 +602,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 - (void) unsubscribeInternal:(RTCStream*)stream
 {
     
-    __weak id weakSelf = self;
     
     NSDictionary* data = @{
                            @"stream": @{
@@ -661,38 +666,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 
 
--(NSString*)iceConnectionState:(RTCIceConnectionState)newState
-{
-    
-    NSString*  state;
-    switch (newState) {
-        case RTCIceConnectionStateNew:
-            state = @"RTCIceConnectionStateNew";
-            break;
-        case RTCIceConnectionStateCompleted:
-            state = @"RTCIceConnectionStateCompleted";
-            break;
-        case RTCIceConnectionStateChecking:
-            state = @"RTCIceConnectionStateChecking";
-            break;
-        case RTCIceConnectionStateConnected:
-            state = @"RTCIceConnectionStateConnected";
-            break;
-        case RTCIceConnectionStateClosed:
-            state = @"RTCIceConnectionStateClosed";
-            break;
-        case RTCIceConnectionStateFailed:
-            state = @"RTCIceConnectionStateFailed";
-            break;
-        case RTCIceConnectionStateDisconnected:
-            state = @"RTCIceConnectionStateDisconnected";
-            break;
-        default:
-            state = @"";
-            break;
-    }
-    return state;
-}
 
 
 
