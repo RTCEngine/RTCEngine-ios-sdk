@@ -10,9 +10,16 @@
 
 #import "RTCView.h"
 #import "RTCEngine.h"
-#import "RTCExternalCapturer.h"
 #import "RTCVideoProfile.h"
 
+
+typedef NS_ENUM(NSInteger, VideoRotation){
+    
+    VideoRoation_0 = 0,
+    VideoRoation_90 = 90,
+    VideoRoation_180 = 180,
+    VideoRoation_270 = 270,
+};
 
 
 @class RTCStream;
@@ -38,30 +45,30 @@
 
 @property (nonatomic,assign) NSDictionary* _Nonnull attributes;
 @property (nonatomic,assign) RTCEngineVideoProfile  videoProfile;
-@property (nonatomic,assign) RTCExternalCapturer* _Nullable videoCaptuer;
 @property (nonatomic,weak) id<RTCStreamDelegate> _Nullable delegate;
 
 
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;
+- (nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;
 
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video delegate:(nullable id<RTCStreamDelegate>)delegate;
+- (nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video delegate:(nullable id<RTCStreamDelegate>)delegate;
 
 
--(nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video videoProfile:(RTCEngineVideoProfile)profile delegate:(nullable id<RTCStreamDelegate> )delegate;
 
--(void)setupVideoProfile:(RTCEngineVideoProfile)profile;
+- (void)setupVideoProfile:(RTCEngineVideoProfile)profile;
 
--(void)setupLocalMedia;
+- (void)setupLocalMedia;
+- (void)shutdownLocalMedia;
 
--(void)shutdownLocalMedia;
+- (void)switchCamera;
 
--(void)switchCamera;
+- (void)muteAudio:(BOOL)muting;
 
--(void)muteAudio:(BOOL)muting;
+- (void)muteVideo:(BOOL)muting;
 
--(void)muteVideo:(BOOL)muting;
 
--(void)snapshot:(void (^_Nonnull)(UIImage* _Nullable image))snapshotBlock;
+- (void)useExternalVideoSource:(BOOL)external;
+
+- (void)sendCVPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(VideoRotation)rotation;
 
 
 @end

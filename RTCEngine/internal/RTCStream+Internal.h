@@ -43,16 +43,20 @@
 @property (nonatomic,weak) RTCPeerConnectionFactory* factory;
 @property (nonatomic,weak) RTCEngine* engine;
 
--(void)onMuteAudio:(BOOL)muting;
 
--(void)onMuteVideo:(BOOL)muting;
+- (nonnull instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;
 
 
--(void)close;
+- (void)onMuteAudio:(BOOL)muting;
 
--(void)setMaxBitrate;
+- (void)onMuteVideo:(BOOL)muting;
 
--(NSDictionary*)dumps;
+
+- (void)close;
+
+- (void)setMaxBitrate;
+
+- (NSDictionary*)dumps;
 
 @end
 

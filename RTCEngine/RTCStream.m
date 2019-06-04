@@ -11,13 +11,12 @@
 
 #import "RTCStream+Internal.h"
 #import "RTCView+Internal.h"
-#import "RTCExternalCapturer.h"
 #import "RTCVideoFilterManager.h"
 #import "RTCVideoFrameConsumer.h"
 #import "RTCEngine+Internal.h"
 #import "RTCEngine.h"
 
-@interface RTCStream() <RTCVideoFrameDelegate,RTCExternalCapturerConsumer,RTCVideoFilterOutputDelegate,RTCPeerConnectionDelegate>
+@interface RTCStream() <RTCVideoFrameDelegate,RTCVideoFilterOutputDelegate,RTCPeerConnectionDelegate>
 {
     NSInteger minWidth;
     NSInteger minHeight;
@@ -30,6 +29,7 @@
     int cameraHeight;
     
     RTCCameraVideoCapturer* cameraCapturer;
+    
     RTCVideoSource* videoSource;
     RTCAudioSource* aduioSource;
     
@@ -37,8 +37,9 @@
     RTCVideoFilterManager* filterManager;
     
     BOOL usingFrontCamera;
+    BOOL usingExternalVideo;
     
-    void (^snapshotBlockCopy)(UIImage*);
+    
 }
 
 
@@ -70,6 +71,7 @@
     _streamId = [[NSUUID UUID] UUIDString];
     
     usingFrontCamera = YES;
+    usingExternalVideo = NO;
     [self setupVideoProfile:RTCEngine_VideoProfile_240P];
     _view = [[RTCView alloc] initWithFrame:CGRectZero];
     return self;
@@ -131,24 +133,17 @@
 -(void) setupLocalMedia
 {
     
-    videoFrameConsumer = [[RTCVideoFrameConsumer alloc] initWithDelegate:self];
     
-    videoSource = [_factory videoSource];
-    
-    // when we use external captuer
-    if(_videoCaptuer != nil) {
-        
-        [_videoCaptuer setVideoConsumer:self];
+    if (_video) {
+        videoFrameConsumer = [[RTCVideoFrameConsumer alloc] initWithDelegate:self];
+        videoSource = [_factory videoSource];
         _videoTrack = [_factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
+        if (!usingExternalVideo) {
+            cameraCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoFrameConsumer];
+            [self startCapture];
+        }
         
-    } else if (_video) {
-        // todo adapter
-        //[videoSource adaptOutputFormatToWidth:<#(int)#> height:<#(int)#> fps:<#(int)#>];
-        
-        cameraCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoFrameConsumer];
-        _videoTrack = [_factory videoTrackWithSource:videoSource trackId:[[NSUUID UUID] UUIDString]];
-        
-        [self startCapture];
+        [_view setVideoTrack:_videoTrack];
     }
     
     if (_audio) {
@@ -157,19 +152,30 @@
         NSLog(@"audio track %@", _audioTrack.trackId);
     }
     
-    if (_videoTrack != nil) {
-        [_view setVideoTrack:_videoTrack];
-    }
 }
 
 
 -(void)shutdownLocalMedia
 {
     
-    [self close];
-    
+    if (_video) {
+        if (!usingExternalVideo) {
+            [self stopCapture];
+        }
+    }
 }
 
+
+- (void)useExternalVideoSource:(BOOL)external
+{
+    usingExternalVideo = external;
+}
+
+- (void)sendCVPixelBuffer:(CVPixelBufferRef)pixelBuffer rotation:(VideoRotation)rotation
+{
+    
+    NSLog(@"sendCVPixelBuffer");
+}
 
 -(void)close
 {
@@ -207,24 +213,13 @@
         if (_local) {
             
             if (_engine) {
-                NSDictionary* data = @{
-                                       @"audio":@(TRUE),
-                                       @"id": _peerId,
-                                       @"msid": _stream.streamId,
-                                       @"local":@(TRUE),
-                                       @"muting":@(muting)
-                                       };
+                NSDictionary* data = @{};
                 
                 [_engine sendConfigure:data];
             }
         } else {
             if(_engine) {
                 NSDictionary* data = @{
-                                       @"audio":@(TRUE),
-                                       @"id": _peerId,
-                                       @"msid": _stream.streamId,
-                                       @"local":@(FALSE),
-                                       @"muting":@(muting)
                                        };
                 [_engine sendConfigure:data];
             }
@@ -320,10 +315,6 @@
 }
 
 
--(void)snapshot:(void (^)(UIImage * _Nullable))snapshotBlock
-{
-    // todo
-}
 
 -(void)setMaxBitrate
 {

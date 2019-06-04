@@ -88,10 +88,10 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 @property (nonatomic, readonly) RTCEngineStatus status;
 
 
-
 - (nonnull instancetype) initWichConfig:(RTCConfig*)config delegate:(id<RTCEngineDelegate>) delegate;
 
-- (RTCStream*) createLocalStream;
+- (RTCStream*) createLocalStreamWithAudio:(BOOL)audio video:(BOOL)video;
+
 
 - (void) publish:(RTCStream* _Nonnull) localStream;
 

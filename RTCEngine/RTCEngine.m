@@ -95,14 +95,16 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (RTCStream*)createLocalStream
+- (RTCStream*) createLocalStreamWithAudio:(BOOL)audio video:(BOOL)video
 {
     
-    RTCStream* stream = [[RTCStream alloc] init];
+    RTCStream* stream = [[RTCStream alloc] initWithAudio:audio video:video];
     stream.local = true;
     stream.factory = _connectionFactory;
+    stream.engine = self;
     return stream;
 }
+
 
 - (void) publish:(RTCStream *)stream
 {
@@ -303,6 +305,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     [_socket on:@"streampublished" callback:^(NSArray * _Nonnull, SocketAckEmitter * _Nonnull) {
         
         
+        
     }];
     
     
@@ -412,7 +415,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleStream:(RTCStream*)stream publishedWithData:(NSDictionary*)data
+- (void) handleLocalStream:(RTCStream*)stream publishedWithData:(NSDictionary*)data
 {
     
      __weak id weakSelf = self;
@@ -437,7 +440,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleStream:(RTCStream*)stream subscribedWithData:(NSDictionary*)data
+- (void) handleLocalStream:(RTCStream*)stream subscribedWithData:(NSDictionary*)data
 {
     
     __weak id weakSelf = self;
@@ -529,7 +532,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
                 
                 NSDictionary* _data = [data objectAtIndex:0];
-                [weakSelf handleStream:stream publishedWithData:_data];
+                [weakSelf handleLocalStream:stream publishedWithData:_data];
             }];
         }]
     }];
@@ -583,7 +586,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
                 
                 NSDictionary* _data = [data objectAtIndex:0];
-                [weakSelf handleStream:stream subscribedWithData:_data];
+                [weakSelf handleLocalStream:stream subscribedWithData:_data];
             }];
             
         }];
@@ -614,6 +617,33 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+- (void) handleStreamPublished:(NSDictionary*)data
+{
+    
+    NSLog(@"handleStreamPublished %@", data);
+    
+    NSString* publisherId = [data valueForKeyPath:@"stream.publisherId"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate rtcengine:self didStreamPublished:publisherId];
+    });
+    
+}
+
+
+- (void) handleStreamUnpublished:(NSDictionary*)data
+{
+    
+    NSLog(@"handleStreamUnpublished %@", data);
+    
+    NSString* publisherId = [data valueForKeyPath:@"stream.publisherId"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate rtcengine:self didStreamUnpublished:publisherId];
+    });
+    
+}
+
 
 -(void) setStatus:(RTCEngineStatus)newStatus
 {
@@ -627,6 +657,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         [_delegate rtcengine:self didStateChange:_status];
     });
 }
+
+
+
 
 
 -(NSString*)iceConnectionState:(RTCIceConnectionState)newState
