@@ -114,7 +114,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     // move to RTCStream ?
     RTCConfiguration *config = [[RTCConfiguration alloc] init];
-    RTCIceTransportPolicy iceTransport = RTCIceTransportPolicyAll;
+    RTCIceTransportPolicy iceTransport = RTCIceTransportPolicyNoHost;
     
     
     //config.iceServers = _iceServers;
@@ -122,6 +122,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
     config.iceTransportPolicy = iceTransport;
     config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.tcpCandidatePolicy = RTCTcpCandidatePolicyDisabled;
     
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
@@ -147,6 +148,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     }
     
     stream.peerconnection = peerconnection;
+    
     [self publishInternal:stream];
 }
 
@@ -174,7 +176,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         return;
     }
     
-    RTCStream* stream = [[RTCStream alloc] init];
+    RTCStream* stream = [[RTCStream alloc] initWithAudio:TRUE video:TRUE];
     stream.audio = TRUE;
     stream.video = TRUE;
     stream.local = false;
@@ -182,12 +184,16 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     stream.publisherId = streamId;
     
+    
+    [_remoteStreams setObject:stream forKey:streamId];
+    
     RTCConfiguration *config = [[RTCConfiguration alloc] init];
-    config.iceServers = _iceServers;
+    //config.iceServers = @[];
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
     config.iceTransportPolicy = RTCIceTransportPolicyAll;
     config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.tcpCandidatePolicy = RTCTcpCandidatePolicyEnabled;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
     RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
@@ -199,7 +205,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     RTCRtpTransceiverInit* transceiverInit = [[RTCRtpTransceiverInit alloc] init];
     transceiverInit.direction = RTCRtpTransceiverDirectionRecvOnly;
-    transceiverInit.streamIds = @[stream.streamId];
+    //transceiverInit.streamIds = @[stream.streamId];
     
     [peerconnection addTransceiverOfType:RTCRtpMediaTypeAudio init:transceiverInit];
     [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
@@ -395,7 +401,8 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     NSArray* streams = [data valueForKeyPath:@"room.streams"];
     
     for(NSDictionary* streamDict in streams){
-        [streamsMap setObject:[streamDict objectForKey:@"data"] forKey:[streamDict objectForKey:@"publisherId"]];
+        NSLog(@"stream %@", streamDict);
+        // [streamsMap setObject:[streamDict objectForKey:@"data"] forKey:[streamDict objectForKey:@"publisherId"]];
     }
     
     __weak id weakSelf = self;
@@ -574,10 +581,16 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         if (error) {
             // TODO delegate to outside
+            NSLog(@"error: %@", error);
             return;
         }
         
         [stream.peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
+            
+            if (error != nil) {
+                NSLog(@"error: %@", error);
+                return;
+            }
             
             NSDictionary* data = @{
                                    @"sdp": sdp.sdp,

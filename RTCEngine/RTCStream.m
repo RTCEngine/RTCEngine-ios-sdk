@@ -343,6 +343,16 @@
 }
 
 
+- (void)setPeerconnection:(RTCPeerConnection *)peerconnection
+{
+    // Limite bitrate
+    [peerconnection setBweMinBitrateBps:@50000
+                      currentBitrateBps:@200000
+                          maxBitrateBps:@500000];
+    
+    _peerconnection = peerconnection;
+}
+
 
 -(NSDictionary*)dumps
 {
@@ -584,7 +594,17 @@ didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
                streams:(NSArray<RTCMediaStream *> *)mediaStreams
 {
     
-    NSLog(@"AddReceiver %@", rtpReceiver.receiverId);
+    
+    if ([rtpReceiver.track.kind isEqualToString:@"video"]){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+             [_view setVideoTrack:rtpReceiver.track];
+        });
+    }
+    
+    if ([rtpReceiver.track.kind isEqualToString:@"audio"]){
+        NSLog(@"Receiver %@", _audioTransceiver.receiver.receiverId);
+    }
     
 }
 

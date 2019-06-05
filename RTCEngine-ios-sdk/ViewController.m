@@ -23,9 +23,9 @@
 
 
 
-static NSString* SignallingsServer = @"http://192.168.1.3:3888/";
+static NSString* SignallingsServer = @"http://192.168.212.217:3888/";
 
-static NSString* ROOM = @"testroom";
+static NSString* ROOM = @"test_room";
 
 
 @interface ViewController () <RTCEngineDelegate, RTCStreamDelegate>
@@ -290,7 +290,7 @@ static NSString* ROOM = @"testroom";
         self.joinButton.enabled = TRUE;
         connected = TRUE;
         
-        [self.rtcEngine publish:self.localStream];
+        //[self.rtcEngine publish:self.localStream];
     }
     
     if (state == RTCEngineStatusDisConnected) {
@@ -321,7 +321,7 @@ static NSString* ROOM = @"testroom";
 {
     
     NSLog(@"Remote stream unpublished %@", streamId);
-    [_rtcEngine unpublish:streamId];
+    //[_rtcEngine unpublish:streamId];
 }
 
 
