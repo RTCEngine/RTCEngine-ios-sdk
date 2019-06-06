@@ -618,9 +618,10 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     //config.iceServers = @[];
     config.bundlePolicy = RTCBundlePolicyMaxBundle;
     config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-    config.iceTransportPolicy = RTCIceTransportPolicyNoHost;
+    config.iceTransportPolicy = RTCIceTransportPolicyAll;
     config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
     config.tcpCandidatePolicy = RTCTcpCandidatePolicyEnabled;
+    config.iceCandidatePoolSize = 1;
     
     RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
     RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config

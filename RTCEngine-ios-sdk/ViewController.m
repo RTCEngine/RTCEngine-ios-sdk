@@ -313,7 +313,7 @@ static NSString* ROOM = @"test_room";
 - (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamPublished:(NSString *) streamId
 {
     NSLog(@"Remote stream published %@", streamId);
-    //[_rtcEngine subscribe:streamId];
+    [_rtcEngine subscribe:streamId];
     
 }
 
