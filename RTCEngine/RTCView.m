@@ -126,7 +126,9 @@
         
         _track = track;
         
-        [track addRenderer:self];
+        if (track != nil){
+            [track addRenderer:self];
+        }
     }
 }
 

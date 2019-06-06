@@ -70,6 +70,22 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
         encoderFactory = [[RTCDefaultVideoEncoderFactory alloc] init];
         
+        NSLog(@"supportd %@", encoderFactory.supportedCodecs);
+        
+        RTCVideoCodecInfo* h264;
+        for (RTCVideoCodecInfo* codecinfo in encoderFactory.supportedCodecs) {
+            NSLog(@"codec info %@ %@", codecinfo.name, codecinfo.parameters);
+            if ([codecinfo.name isEqualToString:@"H264"]) {
+                if ([[codecinfo.parameters objectForKey:@"profile-level-id"] isEqualToString:@"42e034"]) {
+                    //[codecinfo.parameters setValue:@"profile-level-id" forKey:@"42e01f"];
+                    h264 = codecinfo;
+                }
+            }
+        }
+        
+    
+        
+        //encoderFactory.preferredCodec = h264;
         streamsMap = [NSMutableDictionary dictionary];
         
         _connectionFactory = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory decoderFactory:decoderFactory];
@@ -112,34 +128,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     // todo check this stream is published already
     _localStream = stream;
     
-    // move to RTCStream ?
-    RTCConfiguration *config = [[RTCConfiguration alloc] init];
-    RTCIceTransportPolicy iceTransport = RTCIceTransportPolicyNoHost;
+    RTCPeerConnection* peerconnection = [self createPeerConnection];
     
-    
-    //config.iceServers = _iceServers;
-    config.bundlePolicy = RTCBundlePolicyMaxBundle;
-    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-    config.iceTransportPolicy = iceTransport;
-    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
-    config.tcpCandidatePolicy = RTCTcpCandidatePolicyDisabled;
-    
-    
-    RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
-    RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
-                                                                                    constraints:connectionconstraints
-                                                                                   delegate:nil];
     peerconnection.delegate = stream;
+    stream.peerconnection = peerconnection;
     
     RTCRtpTransceiverInit* transceiverInit = [[RTCRtpTransceiverInit alloc] init];
     transceiverInit.direction = RTCRtpTransceiverDirectionSendOnly;
     transceiverInit.streamIds = @[stream.streamId];
-    
-    if (stream.videoTrack) {
-        stream.videoTransceiver = [peerconnection addTransceiverWithTrack:stream.videoTrack init:transceiverInit];
-    } else {
-        stream.videoTransceiver = [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
-    }
     
     if (stream.audioTrack) {
         stream.audioTransceiver = [peerconnection addTransceiverWithTrack:stream.audioTrack init:transceiverInit];
@@ -147,7 +143,11 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         stream.audioTransceiver = [peerconnection addTransceiverOfType:RTCRtpMediaTypeAudio init:transceiverInit];
     }
     
-    stream.peerconnection = peerconnection;
+    if (stream.videoTrack) {
+        stream.videoTransceiver = [peerconnection addTransceiverWithTrack:stream.videoTrack init:transceiverInit];
+    } else {
+        stream.videoTransceiver = [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
+    }
     
     [self publishInternal:stream];
 }
@@ -184,28 +184,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     stream.publisherId = streamId;
     
-    
     [_remoteStreams setObject:stream forKey:streamId];
     
-    RTCConfiguration *config = [[RTCConfiguration alloc] init];
-    //config.iceServers = @[];
-    config.bundlePolicy = RTCBundlePolicyMaxBundle;
-    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
-    config.iceTransportPolicy = RTCIceTransportPolicyAll;
-    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
-    config.tcpCandidatePolicy = RTCTcpCandidatePolicyEnabled;
-    
-    RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
-    RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
-                                                                                constraints:connectionconstraints
-                                                                                   delegate:nil];
+    RTCPeerConnection* peerconnection = [self createPeerConnection];
     peerconnection.delegate = stream;
     stream.peerconnection = peerconnection;
     
-    
     RTCRtpTransceiverInit* transceiverInit = [[RTCRtpTransceiverInit alloc] init];
     transceiverInit.direction = RTCRtpTransceiverDirectionRecvOnly;
-    //transceiverInit.streamIds = @[stream.streamId];
     
     [peerconnection addTransceiverOfType:RTCRtpMediaTypeAudio init:transceiverInit];
     [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
@@ -397,12 +383,11 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 - (void) handleJoined:(NSDictionary*) data
 {
     
-    
     NSArray* streams = [data valueForKeyPath:@"room.streams"];
     
     for(NSDictionary* streamDict in streams){
         NSLog(@"stream %@", streamDict);
-        // [streamsMap setObject:[streamDict objectForKey:@"data"] forKey:[streamDict objectForKey:@"publisherId"]];
+        //[streamsMap setObject:[streamDict objectForKey:@"data"] forKey:[streamDict objectForKey:@"publisherId"]];
     }
     
     __weak id weakSelf = self;
@@ -421,7 +406,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleLocalStream:(RTCStream*)stream publishedWithData:(NSDictionary*)data
+- (void) handlePublishStream:(RTCStream*)stream ackWithData:(NSDictionary*)data
 {
     
      __weak id weakSelf = self;
@@ -446,14 +431,12 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleLocalStream:(RTCStream*)stream subscribedWithData:(NSDictionary*)data
+- (void) handleSubscribeStream:(RTCStream*)stream ackWithData:(NSDictionary*)data
 {
     
     __weak id weakSelf = self;
     
     NSDictionary* attributes = [data objectForKey:@"stream"];
-    
-    NSLog(@"stream data %@", attributes);
     
     RTCSessionDescription *answer = [RTCSessionDescription
                                      descriptionFromJSONDictionary:@{
@@ -472,41 +455,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         });
     
     }];
-    
 }
-
-
-
-
--(void) handleConfigure:(NSDictionary*)data
-{
-    NSString* msid = [data objectForKey:@"msid"];
-    if(!msid){
-        return;
-    }
-    
-    RTCStream* remoteStream = [_remoteStreams objectForKey:msid];
-    
-    if(!remoteStream) {
-        return;
-    }
-    
-    if([data objectForKey:@"video"]){
-        BOOL muting = [[data objectForKey:@"muting"] boolValue];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [remoteStream onMuteAudio:muting];
-        });
-    }
-    
-    if([data objectForKey:@"audio"]) {
-        BOOL muting = [[data objectForKey:@"muting"] boolValue];
-        dispatch_async(dispatch_get_main_queue(), ^{
-             [remoteStream onMuteAudio:muting];
-        });
-       
-    }
-}
-
 
 
 -(void) publishInternal:(RTCStream*) stream
@@ -518,11 +467,11 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         
         if (error) {
             // TODO delegate to outside
+            NSLog(@"error %@", error);
             return;
         }
         
         [stream.peerconnection setLocalDescription:sdp completionHandler:^(NSError * _Nullable error) {
-            
             
             if (error) {
                 NSLog(@"error %@",error);
@@ -544,7 +493,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
                 
                 NSDictionary* _data = [data objectAtIndex:0];
-                [weakSelf handleLocalStream:stream publishedWithData:_data];
+                [weakSelf handlePublishStream:stream ackWithData:_data];
             }];
         }];
     }];
@@ -604,7 +553,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
             [ack timingOutAfter:10.0 callback:^(NSArray * _Nonnull data) {
                 
                 NSDictionary* _data = [data objectAtIndex:0];
-                [weakSelf handleLocalStream:stream subscribedWithData:_data];
+                [weakSelf handleSubscribeStream:stream ackWithData:_data];
             }];
             
         }];
@@ -662,6 +611,26 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
+- (RTCPeerConnection*) createPeerConnection
+{
+    
+    RTCConfiguration *config = [[RTCConfiguration alloc] init];
+    //config.iceServers = @[];
+    config.bundlePolicy = RTCBundlePolicyMaxBundle;
+    config.rtcpMuxPolicy = RTCRtcpMuxPolicyRequire;
+    config.iceTransportPolicy = RTCIceTransportPolicyNoHost;
+    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.tcpCandidatePolicy = RTCTcpCandidatePolicyEnabled;
+    
+    RTCMediaConstraints *connectionconstraints = [RTCMediaConstraintUtil connectionConstraints];
+    RTCPeerConnection* peerconnection = [_connectionFactory peerConnectionWithConfiguration:config
+                                                                                constraints:connectionconstraints
+                                                                                   delegate:nil];
+    
+    return peerconnection;
+}
+
+
 -(void) setStatus:(RTCEngineStatus)newStatus
 {
     if (_status == newStatus) {
@@ -674,15 +643,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         [_delegate rtcengine:self didStateChange:_status];
     });
 }
-
-
-
-
-
-
-
-
-
 
 
 

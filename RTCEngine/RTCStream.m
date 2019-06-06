@@ -532,9 +532,6 @@ didChangeSignalingState:(RTCSignalingState)stateChanged
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didChangeIceConnectionState:(RTCIceConnectionState)newState
 {
-    NSString* state = [self iceConnectionState:newState];
-    
-    NSLog(@"ice state %@", state);
     
 }
 
@@ -594,11 +591,9 @@ didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
                streams:(NSArray<RTCMediaStream *> *)mediaStreams
 {
     
-    
     if ([rtpReceiver.track.kind isEqualToString:@"video"]){
-        
         dispatch_async(dispatch_get_main_queue(), ^{
-             [_view setVideoTrack:rtpReceiver.track];
+            [self->_view setVideoTrack:rtpReceiver.track];
         });
     }
     
@@ -614,6 +609,12 @@ didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
 {
     
     NSLog(@"RemoveReceiver %@", rtpReceiver.receiverId);
+    
+    if ([rtpReceiver.track.kind isEqualToString:@"video"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_view setVideoTrack:nil];
+        });
+    }
 }
 
 @end
