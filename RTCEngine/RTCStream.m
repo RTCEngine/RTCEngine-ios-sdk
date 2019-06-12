@@ -184,13 +184,16 @@
          [self stopCapture];
     }
     
-    if (_videoTrack ) {
-        _videoTrack = nil;
+    if (_audioTransceiver != nil) {
+        [_audioTransceiver stop];
     }
     
-    if (_audioTrack) {
-        _audioTrack = nil;
+    if (_videoTransceiver != nil){
+        [_videoTransceiver stop];
     }
+    
+    _audioTransceiver = nil;
+    _videoTransceiver = nil;
     
     if (_peerconnection != nil) {
         [_peerconnection close];

@@ -95,9 +95,9 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 - (void) unpublish:(RTCStream* _Nonnull) localStream;
 
-- (void) subscribe:(NSString*) streamId;
+- (void) subscribe:(RTCStream* _Nonnull) remoteStream;
 
-- (void) unsubscribe:(NSString*) streamId;
+- (void) unsubscribe:(RTCStream* _Nonnull) remoteStream;
 
 - (void) joinRoom:(NSString* _Nonnull) roomId;
 
@@ -118,10 +118,10 @@ typedef NS_ENUM(NSInteger, RTCEngineStatus) {
 
 - (void) rtcengine:(RTCEngine* _Nonnull) engine  didLocalStreamUnPublished:(RTCStream *) stream;
 
-- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamPublished:(NSString *) streamId;
 
-- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamUnpublished:(NSString *) streamId;
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamAdded:(RTCStream *) stream;
 
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamRemoved:(RTCStream *) stream;
 
 - (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamSubscribed:(RTCStream *) stream;
 

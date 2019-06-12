@@ -169,22 +169,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) subscribe:(NSString *)streamId
+- (void) subscribe:(RTCStream *)stream
 {
     
-    if ([_remoteStreams objectForKey:streamId]) {
+    if ([_remoteStreams objectForKey:stream.publisherId]) {
         return;
     }
     
-    RTCStream* stream = [[RTCStream alloc] initWithAudio:TRUE video:TRUE];
-    stream.audio = TRUE;
-    stream.video = TRUE;
-    stream.local = false;
-    stream.engine = self;
-    
-    stream.publisherId = streamId;
-    
-    [_remoteStreams setObject:stream forKey:streamId];
+    [_remoteStreams setObject:stream forKey:stream.publisherId];
     
     RTCPeerConnection* peerconnection = [self createPeerConnection];
     peerconnection.delegate = stream;
@@ -202,24 +194,14 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 
 
 
-- (void) unsubscribe:(NSString *)streamId
+- (void) unsubscribe:(RTCStream*)stream
 {
     
-    RTCStream* stream = [_remoteStreams objectForKey:streamId];
+    [self unsubscribeInternal:stream];
     
-    if(stream == nil) {
-        return;
-    }
+    [_remoteStreams removeObjectForKey:stream.publisherId];
     
-    if(stream.videoTransceiver) {
-        [stream.videoTransceiver stop];
-    }
-    
-    if(stream.audioTransceiver) {
-        [stream.audioTransceiver stop];
-    }
-    
-    [_remoteStreams removeObjectForKey:streamId];
+    [stream close];
 }
 
 
@@ -290,20 +272,19 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         });
     }];
     
-    
-    [_socket on:@"streampublished" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
+    [_socket on:@"streamadded" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
         NSDictionary* _data = [data objectAtIndex:0];
-        [self handleStreamPublished:_data];
+        [self handleStreamAdded:_data];
+        
     }];
     
-    
-    [_socket on:@"streamunpublished" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
+    [_socket on:@"streamremoved" callback:^(NSArray * _Nonnull data, SocketAckEmitter * _Nonnull ack) {
         
         NSDictionary* _data = [data objectAtIndex:0];
-        [self handleStreamUnpublished:_data];
+        [self handleStreamRemoved:_data];
+        
     }];
-    
     
     [_socket connect];
 }
@@ -583,33 +564,58 @@ static RTCEngine *sharedRTCEngineInstance = nil;
 }
 
 
-- (void) handleStreamPublished:(NSDictionary*)data
+
+- (void) handleStreamAdded:(NSDictionary*)data
 {
     
-    NSLog(@"handleStreamPublished %@", data);
+    NSLog(@"handleStreamAdded %@", data);
     
     NSString* publisherId = [data valueForKeyPath:@"stream.publisherId"];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rtcengine:self didStreamPublished:publisherId];
-    });
+    RTCStream* stream = [self createRemoteStream:publisherId];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate rtcengine:self didStreamAdded:stream];
+    });
 }
 
 
-- (void) handleStreamUnpublished:(NSDictionary*)data
+
+- (void) handleStreamRemoved:(NSDictionary*)data
 {
     
     NSLog(@"handleStreamUnpublished %@", data);
     
     NSString* publisherId = [data valueForKeyPath:@"stream.publisherId"];
     
+    RTCStream* remoteStream = [_remoteStreams objectForKey:publisherId];
+    
+    if(remoteStream == nil) {
+        return;
+    }
+    
+    [_remoteStreams removeObjectForKey:publisherId];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rtcengine:self didStreamUnpublished:publisherId];
+        [self.delegate rtcengine:self didStreamRemoved:remoteStream];
     });
     
 }
 
+
+
+- (RTCStream*) createRemoteStream:(NSString*)publisherId
+{
+    RTCStream* stream = [[RTCStream alloc] initWithAudio:TRUE video:TRUE];
+    stream.audio = FALSE;
+    stream.video = FALSE;
+    stream.local = false;
+    stream.engine = self;
+    
+    stream.publisherId = publisherId;
+    
+    return stream;
+}
 
 - (RTCPeerConnection*) createPeerConnection
 {

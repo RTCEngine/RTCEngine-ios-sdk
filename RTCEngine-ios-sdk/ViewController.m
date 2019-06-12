@@ -310,18 +310,18 @@ static NSString* ROOM = @"test_room";
     NSLog(@"Local stream unpublished %@", stream.streamId);
 }
 
-- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamPublished:(NSString *) streamId
+
+
+
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamAdded:(RTCStream *) stream
 {
-    NSLog(@"Remote stream published %@", streamId);
-    [_rtcEngine subscribe:streamId];
     
+    [_rtcEngine subscribe:stream];
 }
 
-- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamUnpublished:(NSString *) streamId
+- (void) rtcengine:(RTCEngine* _Nonnull) engine  didStreamRemoved:(RTCStream *) stream
 {
-    
-    NSLog(@"Remote stream unpublished %@", streamId);
-    //[_rtcEngine unpublish:streamId];
+    [_rtcEngine unsubscribe:stream];
 }
 
 
