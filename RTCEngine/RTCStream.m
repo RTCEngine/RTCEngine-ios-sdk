@@ -16,7 +16,7 @@
 #import "RTCEngine+Internal.h"
 #import "RTCEngine.h"
 
-@interface RTCStream() <RTCVideoFrameDelegate,RTCPeerConnectionDelegate>
+@interface RTCStream() <RTCVideoFrameDelegate,RTCPeerConnectionDelegate,RTCRtpReceiverDelegate>
 {
     NSInteger minWidth;
     NSInteger minHeight;
@@ -404,7 +404,6 @@
         
         if (cameraCapturer != nil && videoSource != nil) {
             [videoSource capturer:cameraCapturer didCaptureVideoFrame:videoFrame];
-            
         }
     }
 }
@@ -596,14 +595,26 @@ didStartReceivingOnTransceiver:(RTCRtpTransceiver *)transceiver
     
     if ([rtpReceiver.track.kind isEqualToString:@"video"]){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self->_view setVideoTrack:rtpReceiver.track];
+            [self->_view setVideoTrack:(RTCVideoTrack*)rtpReceiver.track];
         });
     }
     
     if ([rtpReceiver.track.kind isEqualToString:@"audio"]){
         NSLog(@"Receiver %@", _audioTransceiver.receiver.receiverId);
+        NSLog(@"Receiver %@", rtpReceiver.receiverId);
     }
     
+}
+
+
+#pragma RTCRtpReceiverDelegate
+- (void)rtpReceiver:(RTCRtpReceiver *)rtpReceiver
+didReceiveFirstPacketForMediaType:(RTCRtpMediaType)mediaType
+{
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate stream:self didReceiveFirstPacket:mediaType];
+    });
 }
 
 /** Called when the receiver and its track are removed. */

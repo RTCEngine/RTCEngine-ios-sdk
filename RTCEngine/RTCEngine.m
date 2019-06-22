@@ -14,11 +14,13 @@
 
 #import <SocketIO/SocketIO-Swift.h>
 
-#import "RTCEngine+Internal.h"
+
+#import "internal/RTCEngine+Internal.h"
 #import "RTCMediaConstraintUtil.h"
 #import "RTCSessionDescription+JSON.h"
 #import "RTCStream.h"
-#import "RTCStream+Internal.h"
+#import "internal/RTCStream+Internal.h"
+#import "internal/RTCView+Internal.h"
 #import "RTCNetUtils.h"
 #import "RTCPeer.h"
 #import "RTCPeerManager.h"
@@ -163,8 +165,9 @@ static RTCEngine *sharedRTCEngineInstance = nil;
         if(stream.audioTransceiver) {
             [stream.peerconnection removeTrack:stream.audioTransceiver.sender];
         }
-        
         [self unpublishInternal:stream];
+        
+        [stream close];
     }
 }
 
@@ -185,8 +188,15 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     RTCRtpTransceiverInit* transceiverInit = [[RTCRtpTransceiverInit alloc] init];
     transceiverInit.direction = RTCRtpTransceiverDirectionRecvOnly;
     
-    [peerconnection addTransceiverOfType:RTCRtpMediaTypeAudio init:transceiverInit];
-    [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
+    
+    stream.audioTransceiver = [peerconnection addTransceiverOfType:RTCRtpMediaTypeAudio init:transceiverInit];
+    stream.videoTransceiver = [peerconnection addTransceiverOfType:RTCRtpMediaTypeVideo init:transceiverInit];
+    
+    NSLog(@"audiotransceiver %@", stream.audioTransceiver.receiver.track.trackId);
+    NSLog(@"videotranceiver %@", stream.videoTransceiver.receiver.track.trackId);
+    
+
+    
     
     [self subscribeInternal:stream];
     
@@ -601,7 +611,6 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     });
     
 }
-
 
 
 - (RTCStream*) createRemoteStream:(NSString*)publisherId

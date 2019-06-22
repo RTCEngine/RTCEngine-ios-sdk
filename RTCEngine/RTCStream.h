@@ -27,9 +27,11 @@ typedef NS_ENUM(NSInteger, VideoRotation){
 
 @protocol RTCStreamDelegate <NSObject>
 
+- (void)stream:(RTCStream* _Nullable)stream  didMutedVideo:(BOOL)muted;
+- (void)stream:(RTCStream* _Nullable)stream  didMutedAudio:(BOOL)muted;
 
--(void)stream:(RTCStream* _Nullable)stream  didMutedVideo:(BOOL)muted;
--(void)stream:(RTCStream* _Nullable)stream  didMutedAudio:(BOOL)muted;
+
+- (void)stream:(RTCStream* _Nullable)stream didReceiveFirstPacket:(RTCRtpMediaType)mediaType;
 
 @end
 
