@@ -391,7 +391,7 @@ static RTCEngine *sharedRTCEngineInstance = nil;
     
     for(NSDictionary* streamDict in streams){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate rtcengine:self didStreamPublished:[streamDict objectForKey:@"publisherId"]];
+            [_delegate rtcengine:self didStreamAdded:[streamDict objectForKey:@"publisherId"]];
         });
     }
 }
